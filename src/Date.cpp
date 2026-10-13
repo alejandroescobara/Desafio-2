@@ -39,7 +39,7 @@ bool Date::isValidDate(unsigned short year,
                  unsigned char minute,
                  unsigned char second) {
 //---------
-  if (hour > 23 || minute > 59 || 59) return false;
+  if (hour > 23 || minute > 59 || second > 59) return false;
 
   if (month < 1 || month > 12) return false;
 
