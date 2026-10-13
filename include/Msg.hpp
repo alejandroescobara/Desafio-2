@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <iostream>
+#include <cstddef>
 
 #include "Date.hpp"
 #include "Usr.hpp"
@@ -11,7 +13,7 @@ class Msg {
 
     Msg(const Usr* sender, const Date& sentDate, const std::string& text);
 
-    Msg(const Msg& other);
+    Msg(const Msg& other) = delete;
 
     ~Msg();
 
@@ -31,7 +33,9 @@ class Msg {
 
     static size_t getTotalMemoryUsage();
 
-    Msg& operator=(const Msg& other);
+    Msg& operator=(const Msg& other) = delete;
+
+    friend std::ostream& operator<<(std::ostream& os, const Msg& date);
 
   private:
     const Usr* sender;

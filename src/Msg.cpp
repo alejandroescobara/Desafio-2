@@ -19,12 +19,6 @@ Msg::Msg(const Usr* sender,
   totalMemoryAllocated += getMemoryUsage();
 }
 
-Msg::Msg(const Msg& other) 
-   : sender(other.sender), sentDate(other.sentDate), isRead(other.isRead), text(other.text) {
-  
-  totalMemoryAllocated += getMemoryUsage();
-}
-
 Msg::~Msg() {
   totalMemoryAllocated -= getMemoryUsage();
 }
@@ -77,19 +71,16 @@ size_t Msg::getTotalMemoryUsage() {
   return totalMemoryAllocated;
 }
 
-Msg& Msg::operator=(const Msg& other) {
-  if (this != &other) {
+std::ostream& operator<<(std::ostream& os, const Msg& targetMsg) {
+    
+  std::string senderName = targetMsg.sender->getUsrname();
+    
+  os << "@" << senderName << "\n";
 
-    size_t oldUsage = getMemoryUsage();
+  os << targetMsg.sentDate << " " << (targetMsg.isRead ? "read" : "unread") << "\n"
+     << targetMsg.text;
 
-    sender   = other.sender;
-    sentDate = other.sentDate;
-    isRead   = other.isRead;
-    text     = other.text;
-
-    totalMemoryAllocated = (totalMemoryAllocated - oldUsage) + getMemoryUsage();
-  }
-
-  return *this;
+  return os;
 }
+
 
