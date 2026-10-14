@@ -1,0 +1,148 @@
+< DataStructure (UDEABOOK) >
+  
+
+  NOTES:
+
+    1. Los albums no se van a guardar en su propio arreglo aparte, si no que se van a guardar directamente en los atributos del usuario.
+
+       la razon por la cual albums es del tipo Album** NO ES por que los datos de albums esten guardados en otro arreglo, como el caso de chats,
+       si no para permitir la facil redimensionalizacion del arreglo.
+
+    2. Los chats se guardan en un arreglo en paralelo de masterArrayUsrs, por que? por que un chat no le pertenece solo a un usuario solo, si no a dos,
+       por lo tanto, para evitar la duplicacion de datos en memoria o mas que todo, facilitar el manejo de datos y su liberacion en memoria,
+       simplemente se guardara un puntero Chat* apuntando al mismo chat en la memoria RAM, pero que tambien pertenecen organizados en un gran array de TODOS los chats
+       tanto para UsrA como para UsrB.
+
+    3. Los arreglos maestros van a estar ordenados, son los unicos arreglos que se van a organizar de la estructura de datos.
+
+    4. Se omitio incluir atributos como el conteo de entidades y las capacidades del arreglo para simplificar el diagrama de la estructura de datos.
+
+  <masterArrayUsrs>-Usr*[N]
+  |
+  *--<Usr1>-Usr
+  |  |
+  |  |-<pfpPath>-String
+  |  |
+  |  |-<usrname>-String
+  |  :
+  |     <-(El resto de atributos triviales)
+  |  :
+  |  |
+  |  |--<joinDate>-Date
+  |  |  |
+  |  |  :
+  |  |
+  |  |--<friends>-Usr*[N]
+  |  |  |
+  |  |  *--<friend1>-Usr
+  |  |  |  |
+  |  |  |  |-<pfpPath>-String
+  |  |  |  :
+  |  |  :
+  |  |  N
+  |  |
+  |  |--<requests>-Usr*[N]
+  |  |  |
+  |  |  *--<request1>-Usr
+  |  |  |  |
+  |  |  |  |-<pfpPath>-String
+  |  |  |  :
+  |  |  :
+  |  |  N
+  |  | 
+  |  |--<albums>-Album*[N]
+  |  |  |
+  |  |  *--<album1>-Album
+  |  |  |  |
+  |  |  |  |-<title>-String
+  |  |  |  :
+  |  |  |    <-(El resto de atributos triviales)
+  |  |  |  :
+  |  |  |  |--<photos>-Photo*[N]
+  |  |  |     |
+  |  |  |     *--<photo1>-Photo
+  |  |  |     |  |
+  |  |  |     |  |-<title>-String
+  |  |  |     |  :
+  |  |  |     |   <-(El resto de atributos triviales)
+  |  |  |     |  :
+  |  |  |     |  |--<likes>-Usr*[N]
+  |  |  |     |     |
+  |  |  |     |     *--<like1>-Usr
+  |  |  |     |     |  |
+  |  |  |     |     |  |-<pfpPath>-String
+  |  |  |     |     |  :
+  |  |  |     |     |
+  |  |  |     |     *--<like2>-Usr
+  |  |  |     |     |  |
+  |  |  |     |     |  :
+  |  |  |     |     :
+  |  |  |     |     N
+  |  |  |     |
+  |  |  |     *--<photo2>-Photo
+  |  |  |     |  |
+  |  |  |     |  :
+  |  |  |     :
+  |  |  |     N 
+  |  |  :
+  |  |  N
+  |  |
+  |  |--<chats>-Chat*[N]
+  |     |
+  |     *--<chat1>-Chat
+  |     |  |
+  |     |  *--<UsrA>-Usr
+  |     |  |  |
+  |     |  |  |-<pfpPath>-String
+  |     |  |  :
+  |     |  |
+  |     |  *--<UsrB>-Usr
+  |     |  |  |
+  |     |  |  |-<pfpPath>-String
+  |     |  |  :
+  |     |  |
+  |     |  |--<msgs>-Msg*[N]
+  |     |     |
+  |     |     *--<msg1>-Msg
+  |     |     |  |
+  |     |     |  |--<sentDate>-Date
+  |     |     |  |  |
+  |     |     |  |  :
+  |     |     |  |
+  |     |     |  |-<text>-String
+  |     |     |  |
+  |     |     |  *--<sender>-Usr
+  |     |     |  |  |
+  |     |     |  |  |-<pfpPath>-String
+  |     |     |  |  :
+  |     |     |  |
+  |     |     |  |-<isRead>-bool  
+  |     |     |
+  |     |     |--<msg2>-Msg
+  |     |     |  |
+  |     |     |  :  
+  |     |     :
+  |     |     N
+  |     |
+  |     *--<chat2>-Chat
+  |     |  |
+  |     |  :
+  |     :
+  |     N
+  |  
+  |  
+  *--<Usr2>-Usr
+  |  |
+  |  :
+  :
+  N
+
+  <masterArrayChats>-Chat*[N]
+  |
+  *-<chat1>-Chat
+  | |
+  | :
+  |
+  :
+  N
+

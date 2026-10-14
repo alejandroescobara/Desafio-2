@@ -1,0 +1,6 @@
+#usrname1;usrname2
+usrname1;sentDate;isRead;text
+usrname1;sentDate;isRead;text
+usrname2;sentDate;isRead;text
+#usrname3;usrname4
+usrname3;sentDate;isRead;text
