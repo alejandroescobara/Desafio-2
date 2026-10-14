@@ -96,7 +96,7 @@ size_t Photo::getFileSize() const{
 
 size_t Photo::getMemoryUsage() const{ //pensar bien como sacar el calculo de la memoria usada
 
-    return 8*likeCount + sizeof(*this)+8;// cada like son un puntero que ocupa 8 bytes mas el ptr del arreglo principal
+    return 8*likeCount + sizeof(*this);// cada like son un puntero que ocupa 8 bytes mas el ptr del arreglo principal
 
 }
 

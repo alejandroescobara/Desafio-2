@@ -44,7 +44,7 @@ const std::string& Album::getPath(){
     return path;
 }
 size_t Album::getMemory(){
-    return 8*(size_t(photoCount)+8)+sizeof(*this); //cada foto en el album es un ptr que pesa 8 bytes
+    return 8*(size_t(photoCount))+sizeof(*this); //cada foto en el album es un ptr que pesa 8 bytes
 }
 
 
