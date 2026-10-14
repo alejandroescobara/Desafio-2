@@ -43,5 +43,5 @@ private:
 
     size_t fileSize;
 
-    void resizeLikes();
+    void resizeLikes();// al final este lo inclui dentro de toggle like
 };

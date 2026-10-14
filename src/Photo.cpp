@@ -6,6 +6,10 @@
 Photo::Photo(const std::string& title, const std::string& path, const Date& date, size_t fileSize)
     :title(title),path(path),date(date),fileSize(fileSize){}
 
+Photo::~Photo(){
+    delete[]likes;
+};
+
 void Photo::setTitle(const std::string& title){
     this->title = title;
 }
