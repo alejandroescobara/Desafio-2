@@ -3,7 +3,7 @@
 #include <new>
 #include <stdexcept>
 
-#include "validators.hpp"
+#include "Usr.hpp"
 
 size_t Chat::totalMemoryAllocated = 0;
 
@@ -35,25 +35,27 @@ Chat::Chat(const Usr* usr1, const Usr* usr2, size_t initialMsgCapacity)
     usrB = usr1;
   }
 
-  msgs = new (std::nothrow) Msg*[initialMsgCapacity];
-  if (!validators::isValidMemoryReservation(msgs)) {
-    throw std::bad_alloc();
+  try {
+    msgs = new Msg*[initialMsgCapacity]; 
+  } catch (const std::bad_alloc&) {
+    delete[] msgs;
+    throw;
   }
 
   for (size_t i = 0; i < msgCapacity; ++i) msgs[i] = nullptr;
 
-  totalMemoryAllocated += (msgCapacity * sizeof(Msg*));
+  totalMemoryAllocated += sizeof(Chat)+(msgCapacity * sizeof(Msg*));
 }
 
 Chat::~Chat() {
-  for (size_t i = 0; i < msgCapacity; ++i) {
+  for (size_t i = 0; i < msgCount; ++i) {
     delete msgs[i];
     msgs[i] = nullptr;
   }
   delete[] msgs;
   msgs = nullptr;
 
-  totalMemoryAllocated -= (msgCapacity * sizeof(Msg*));
+  totalMemoryAllocated -= (sizeof(Chat)+(msgCapacity * sizeof(Msg*)));
 }
 
 const Msg* const* Chat::getMsgs() const {
@@ -64,25 +66,25 @@ size_t Chat::getMsgCount() const {
   return msgCount;
 }
 
-//
 void Chat::resizeMsgs() {
-  size_t oldCapacity = msgCapacity;
-  msgCapacity *= 2;
-  Msg** auxMsgs = new (std::nothrow) Msg*[msgCapacity];
-  if (!validators::isValidMemoryReservation(auxMsgs)) {
-    throw std::bad_alloc();
+  size_t newCapacity = msgCapacity * 2;
+ 
+  Msg** auxMsgs = nullptr; 
+  try {
+    auxMsgs = new Msg*[newCapacity]; 
+  } catch (const std::bad_alloc&) {
+    delete[] auxMsgs;
+    throw;
   }
 
-  for (size_t i = 0; i < msgCount ; ++i ) {
-    auxMsgs[i] = msgs[i];
-  }
-  for (size_t i = msgCount; i < msgCapacity; ++i) {
-    auxMsgs[i] = nullptr;
-  }
+  for (size_t i = 0; i < msgCount ; ++i )         auxMsgs[i] = msgs[i];
+  for (size_t i = msgCount; i < newCapacity; ++i) auxMsgs[i] = nullptr;
+  
   delete[] msgs;
   msgs = auxMsgs;
 
-  totalMemoryAllocated += ((msgCapacity - oldCapacity) * sizeof(Msg*));
+  totalMemoryAllocated += ((newCapacity - msgCapacity) * sizeof(Msg*));
+  msgCapacity = newCapacity;
 }
 
 const Usr* Chat::getUsrA() const {

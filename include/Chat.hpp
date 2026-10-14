@@ -2,8 +2,9 @@
 
 #include <cstddef>
 
-#include "Usr.hpp"
 #include "Msg.hpp"
+
+class Usr;
 
 class Chat {
   public:
@@ -18,7 +19,6 @@ class Chat {
   
     const Msg* const* getMsgs() const;
     size_t getMsgCount() const;
-    void resizeMsgs();
 
     const Usr* getUsrA() const;
     const Usr* getUsrB() const;
@@ -44,6 +44,7 @@ class Chat {
     size_t msgCount;
     size_t msgCapacity;
 
-
     static size_t totalMemoryAllocated;
+
+    void resizeMsgs();
 };

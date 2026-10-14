@@ -1,5 +1,6 @@
 #include "Msg.hpp"
-#include "validators.hpp"
+
+#include "Usr.hpp"
 
 size_t Msg::totalMemoryAllocated = 0;
 
@@ -12,10 +13,6 @@ Msg::Msg(const Usr* sender,
     text(text) {
 //---------
 
-  if(!validators::isValidMsgText(text)) {
-    throw std::invalid_argument("ERROR: the message must be between 1-512 Characters long");
-  }
-  
   totalMemoryAllocated += getMemoryUsage();
 }
 
@@ -32,10 +29,6 @@ const Date& Msg::getSentDate() const {
 }
 
 void Msg::setText(const std::string& newText) { 
-  if(!validators::isValidMsgText(newText)) {
-    throw std::invalid_argument("ERROR: the message must be betweeen 1-512 Characters long");
-  }
-
   size_t oldUsage = getMemoryUsage();
   
   text = newText;

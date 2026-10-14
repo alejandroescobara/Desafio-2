@@ -5,7 +5,8 @@
 #include <cstddef>
 
 #include "Date.hpp"
-#include "Usr.hpp"
+
+class Usr;
 
 class Msg {
   public:
