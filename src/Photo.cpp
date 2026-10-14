@@ -1,113 +1,117 @@
 #include "Photo.hpp"
 #include "Date.hpp"
+
 #include <string>
+#include <stdexcept>
 
+size_t Photo::totalMemoryAllocated = 0;
 
-Photo::Photo(const std::string& title, const std::string& path, const Date& date, size_t fileSize)
-    :title(title),path(path),date(date),fileSize(fileSize){}
+Photo::Photo(const std::string& title, const Date& date, const std::string& albumPath, size_t fileSize, size_t initialLikeCapacity)
+    :title(title),
+    path(albumPath+"/"+title),
+    date(date),
+    fileSize(fileSize),
+    likes(nullptr),
+    likeCount(0),
+    likeCapacity(initialLikeCapacity) {
+
+  try {
+    likes = new Usr*[initialLikeCapacity]; 
+  } catch (const std::bad_alloc&) {
+    delete[] likes;
+    throw;
+  }
+
+  for (size_t i = 0; i < likeCapacity; ++i) likes[i] = nullptr;
+
+  totalMemoryAllocated += sizeof(Photo)+(likeCapacity * sizeof(Usr*));
+}
 
 Photo::~Photo(){
-    delete[]likes;
+    delete[] likes;
+    totalMemoryAllocated -= sizeof(Photo)+(likeCapacity * sizeof(Usr*));
 };
-
-void Photo::setTitle(const std::string& title){
-    this->title = title;
-}
 
 const std::string& Photo::getTitle()const{
     return title;
-}
-
-void Photo::setPath(const std::string& path){
-    this->path = path;
 }
 
 const std::string& Photo::getPath()const{
     return path;
 }
 
-bool Photo::isInLikes(const Usr& refUsrname) const{
-    bool isIn = false;
-    Usr *  ptrUsrLike;
-    for(size_t i = 0; i < likeCount; i++){
-       ptrUsrLike = likes[i];
-        if (ptrUsrLike == &refUsrname){
-            isIn = true;
-        }
+bool Photo::isInLikes(const Usr* targetUsr) const{
+  for(size_t i = 0; i < likeCount; i++){
+    if (likes[i] == targetUsr) {
+      return true;
     }
-    return isIn;
+  }
+  return false;
 }
 
-void Photo::toggleLike(Usr& refUsrname){//aqui hay que ver bien cual es el parametro // ok ya listo
+void Photo::resizeLikes() {
+  size_t newCapacity = likeCapacity * 2;
 
-    bool Ilike = Photo::isInLikes(refUsrname);
-    Usr *  ptrUsrLike;
-    Usr ** allLikes;
-    if (Ilike){
-        allLikes = new Usr*[likeCount-1];
-        for(size_t i = 0; i < likeCount; i++){
-            ptrUsrLike = likes[i];
-            if(ptrUsrLike == &refUsrname){
-                //aqui va el borrado y redimencionamiento de los likes
-                for(size_t j = 0; j<i;j++){
-                    allLikes[j] = likes[j];
-                }
-                for(size_t j = i; j<likeCount-1;j++){
-                    allLikes[j] = likes[j+1];
-                }
-                break;
-            }
-        }
-        likeCount--;
+  Usr** auxLikes = nullptr;
+
+  try {
+    auxLikes = new Usr*[newCapacity]; 
+  } catch (const std::bad_alloc&) {
+    delete[] auxLikes;
+    throw;
+  }
+
+  for (size_t i = 0; i < likeCount; ++i)           auxLikes[i] = likes[i];
+  for (size_t i = likeCount; i < newCapacity; ++i) auxLikes[i] = nullptr;
+
+  delete[] likes;
+  likes = auxLikes;
+
+  totalMemoryAllocated += ((newCapacity - likeCapacity)* sizeof(Usr*));
+  likeCapacity = newCapacity;
+}
+
+void Photo::removeLike(Usr* targetLike) {
+  if (targetLike == nullptr || likes == nullptr || likeCount == 0) {
+    return;
+  }
+
+  for (size_t i = 0; i < likeCount; ++i) {
+    if (likes[i] == targetLike) {
+      for (size_t j = i; j < likeCount - 1; ++j) {
+        likes[j] = likes[j + 1];
+      }
+      likes[likeCount - 1] = nullptr;
+      --likeCount;
+      return;
     }
-    else{
-        allLikes = new Usr*[likeCount+1];
-        for(size_t j = 0; j<likeCount;j++){
-            allLikes[j] = likes[j];
-        }
-        allLikes[likeCount] = &refUsrname;
-        likeCount++;
+  }
+}
+
+void Photo::toggleLike(Usr* targetUsr){
+  if (isInLikes(targetUsr)) {
+    removeLike(targetUsr);    
+  }
+  else {
+    if (likeCount >= likeCapacity) {
+      resizeLikes();
     }
-    delete[] likes;
-    likes = allLikes;
-
-}
-/*
-size_t Photo::getLikeCount() const{
-
-}
-*/
-
-void Photo::setDate(const Date& date){
-    this->date = date;
+    likes[likeCount++] = targetUsr;
+  }
 }
 
-const Date& Photo::getDate()const{
-    return date;
+size_t Photo::getLikeCount() const {
+  return likeCount;
 }
 
-void Photo::setFileSize(size_t fileSize){
-    this->fileSize = fileSize;
+const Date& Photo::getDate() const {
+  return date;
 }
 
 size_t Photo::getFileSize() const{
     return fileSize;
 }
 
-size_t Photo::getMemoryUsage() const{ //pensar bien como sacar el calculo de la memoria usada
-
-    return 8*likeCount + sizeof(*this);// cada like son un puntero que ocupa 8 bytes mas el ptr del arreglo principal
-
+size_t Photo::getTotalMemoryAllocated() const{ 
+  return totalMemoryAllocated;
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -23,10 +23,10 @@ class Usr {
         const std::string& country,
         const Date& dob,
         const Date& joinDate = Date::now(),
-        size_t initialFriendCapacity = 10,
-        size_t initialRequestCapacity = 10,
-        size_t initialChatCapacity = 10,
-        size_t initialAlbumCapacity = 10);
+        size_t initialFriendCapacity = 16,
+        size_t initialRequestCapacity = 4,
+        size_t initialChatCapacity = 8,
+        size_t initialAlbumCapacity = 4);
 
     ~Usr();
 

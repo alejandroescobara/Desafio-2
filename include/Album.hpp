@@ -3,21 +3,25 @@
 #include <string>
 
 class Album{
-public:
-
-    Album(const std::string& title , const std::string& path ,  char visibility = 'P');
+  public:
+    
+    Album(const std::string& title, const std::string& path, char visibility = 'P', size_t initialPhotoCapacity = 8);
+    
     ~Album();
 
-    const Photo* const* getPhotos();
-    Photo * getTargetPhoto(const std::string& targetTitle);
-    short getPhotoCount();
+    const Photo* const* getPhotos() const;
 
-    const std::string& getTitle();
-    char getVisibility();
-    const std::string& getPath();
+    size_t getPhotoCount() const;
 
-    size_t getMemory();
-    //Album& operator+=(Photo* Photo); debido a que como usr no añadimos mas fotos de esto se encarga el sistema
+    const std::string& getTitle() const;
+
+    char getVisibility() const;
+
+    const std::string& getPath() const;
+
+    size_t getTotalMemoryAllocated() const;
+
+    Album& operator+=(Photo* newPhotoo);
 
 private:
     std::string title;
@@ -26,10 +30,10 @@ private:
     char visibility;
 
     Photo ** photos;
-    short photoCount;
-    //size_t photoCapacity; por el momento no lo veo necesario
-    //static size_t totalMemoryAllocated;
+    size_t photoCount;
+    size_t photoCapacity;
+    
+    static size_t totalMemoryAllocated;
 
-    //void resizePhotos();//posiblemente este no se use, pues no hay que añadir fotos
-
+    void resizePhotos();
 };
