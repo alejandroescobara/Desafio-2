@@ -5,21 +5,37 @@
 class Album{
   public:
     
-    Album(const std::string& title, const std::string& path, char visibility = 'P', size_t initialPhotoCapacity = 8);
+    Album(const std::string& title, const std::string& ownerUsrname, char visibility = 'P', size_t initialPhotoCapacity = 8);
     
     ~Album();
 
-    const Photo* const* getPhotos() const;
+    Photo** getPhotos() {
+      return photos;
+    }
 
-    size_t getPhotoCount() const;
+    const Photo* const* getPhotos() const {
+      return photos;
+    }
 
-    const std::string& getTitle() const;
+    size_t getPhotoCount() const {
+      return photoCount;
+    }
 
-    char getVisibility() const;
+    const std::string& getTitle() const {
+      return title;
+    }
 
-    const std::string& getPath() const;
+    char getVisibility() const {
+      return visibility;
+    }
 
-    size_t getTotalMemoryAllocated() const;
+    const std::string& getPath() const {
+      return path;
+    }
+
+    static size_t getTotalMemoryAllocated() {
+      return totalMemoryAllocated;
+    }
 
     Album& operator+=(Photo* newPhotoo);
 

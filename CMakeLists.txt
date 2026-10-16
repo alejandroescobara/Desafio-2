@@ -13,6 +13,7 @@ add_executable(Desafio2
     src/main.cpp
     src/udeaBook.cpp
     src/dataManager.cpp
+    src/core.cpp
     src/validators.cpp
 
     src/Album.cpp
@@ -24,6 +25,7 @@ add_executable(Desafio2
 
     include/udeaBook.hpp
     include/dataManager.hpp
+    include/core.hpp
     include/validators.hpp
     include/Album.hpp
     include/Chat.hpp

@@ -4,6 +4,7 @@
 #include <cstddef>
 
 #include "Date.hpp"
+#include "dataManager.hpp"
 
 class Chat;
 
@@ -30,41 +31,95 @@ class Usr {
 
     ~Usr();
 
-    const std::string& getUsrname() const;
+    const std::string& getUsrname() const {
+      return usrname;
+    }
 
-    const std::string& getPfpPath() const;
+    const std::string& getPfpPath() const {
+      return pfpPath;
+    }
 
-    const std::string& getEmail() const;
+    const std::string& getEmail() const {
+      return email;
+    }
 
     bool checkPwd(const std::string& inputPwd) const;
 
-    const std::string& getCity() const;
+    const std::string& getCity() const {
+      return city;
+    }
 
-    const std::string& getCountry() const;
+    const std::string& getCountry() const {
+      return country;
+    }
 
-    const Date& getDob() const;
+    const Date& getDob() const {
+      return dob;
+    }
     
-    const Date& getJoinDate() const;
+    const Date& getJoinDate() const {
+      return joinDate;
+    }
 
-    const Usr* const* getFriends() const;
-    size_t getFriendCount() const;
+    Usr** getFriends() {
+      return friends;
+    }
+
+    const Usr* const* getFriends() const {
+      return friends;
+    }
+
+    size_t getFriendCount() const {
+      return friendCount;
+    }
+
     void addFriend(Usr* newFriend);
 
     bool isFriend(const Usr* targetUsr) const; 
 
-    const Chat* const* getChats() const;
-    size_t getChatCount() const;
+    Chat** getChats() {
+      return chats;
+    }
+
+    const Chat* const* getChats() const {
+      return chats;
+    }
+
+    size_t getChatCount() const {
+      return chatCount;
+    }
+
     void addChat(Chat* newChat);
 
-    Usr** getRequests();
-    size_t getRequestCount() const;
+    Usr** getRequests() {
+      return requests;
+    }
+
+    const Usr* const* getRequests() const {
+      return requests;
+    }
+
+    size_t getRequestCount() const {
+      return requestCount;
+    }
+
     void addRequest(Usr* newRequest);
 
     void processRequest(Usr* targetRequest, bool accept);
     void removeRequest(Usr* targetRequest);
 
-    const Album* const* getAlbums() const;
-    size_t getAlbumCount() const;
+    Album** getAlbums() {
+      return albums;
+    }
+
+    const Album* const* getAlbums() const {
+      return albums;
+    }
+
+    size_t getAlbumCount() const {
+      return albumCount;
+    }
+
     void addAlbum(Album* newAlbum);
 
     size_t countCommonFriends(const Usr* otherUsr) const; //NOTE: printRandFriend->udeaBook
@@ -76,8 +131,14 @@ class Usr {
     Usr& operator=(const Usr& other) = delete;
 
     friend std::ostream& operator<<(std::ostream& os, const Usr& usr); //<- printProfile
+                                                                       
+    friend bool dataManager::writeUsers(Usr** masterArrayUsrs, const size_t masterUsrCount, const char* filePath);
 
-    //NOTE: el modulo systemManager queda encargado de: sendMsg y sendRequest
+    static size_t getTotalMemoryAllocated() {
+      return totalMemoryAllocated;
+    }
+
+    //NOTE: el modulo core o udeaBook queda encargado de: sendMsg y sendRequest
     
     //NOTE: el modulo udeaBook queda encargado de: printRequests, printRandFriend,
     //printSuggestions
@@ -93,7 +154,6 @@ class Usr {
     Date dob;
     Date joinDate;
 
-    //TODO: volver friends y requests constantes, cambiar resizes y etc para este cambio futuro
     Usr** friends;
     size_t friendCount;
     size_t friendCapacity;
@@ -112,7 +172,9 @@ class Usr {
 
     static size_t totalMemoryAllocated;
 
-    const std::string& getPwd() const;
+    const std::string& getPwd() const {
+      return pwd;
+    }
 
     void resizeFriends();
 

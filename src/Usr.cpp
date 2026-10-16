@@ -1,5 +1,6 @@
 #include "Usr.hpp"
 
+#include "dataManager.hpp"
 #include <stdexcept>
 
 #include "Chat.hpp"
@@ -87,49 +88,8 @@ Usr::~Usr() {
   totalMemoryAllocated -= (albumCapacity * sizeof(Album*));
 }
 
-const std::string& Usr::getPfpPath() const {
-  return pfpPath;
-}
-
-const std::string& Usr::getUsrname() const {
-  return usrname;
-}
-
-const std::string& Usr::getEmail() const {
-  return email;
-}
-
 bool Usr::checkPwd(const std::string& inputPwd) const {
   return inputPwd == pwd;
-}
-
-const std::string& Usr::getPwd() const {
-  return pwd;
-}
-
-
-const std::string& Usr::getCity() const {
-  return city;
-}
-
-const std::string& Usr::getCountry() const {
-  return country;
-}
-
-const Date& Usr::getDob() const {
-  return dob;
-}
-
-const Date& Usr::getJoinDate() const {
-  return joinDate;
-}
-
-const Usr* const* Usr::getFriends() const {
-  return friends;
-}
-
-size_t Usr::getFriendCount() const {
-  return friendCount;
 }
 
 void Usr::addFriend(Usr* newFriend) { 
@@ -168,14 +128,6 @@ void Usr::resizeFriends() {
   friendCapacity = newCapacity;
 }
 
-const Chat* const* Usr::getChats() const {
-  return chats;
-}
-
-size_t Usr::getChatCount() const {
-  return chatCount;
-}
-
 void Usr::addChat(Chat* newChat) {
   if (chatCount >= chatCapacity) {
     resizeChats();
@@ -195,22 +147,14 @@ void Usr::resizeChats() {
     throw;
   }
 
-  for (size_t i = 0; i < chatCount; ++i)              auxChats[i] = chats[i];
-  for (size_t i = chatCount; i < newCapacity; ++i)   auxChats[i] = nullptr;
+  for (size_t i = 0; i < chatCount; ++i)           auxChats[i] = chats[i];
+  for (size_t i = chatCount; i < newCapacity; ++i) auxChats[i] = nullptr;
 
   delete[] chats;
   chats = auxChats;
 
   totalMemoryAllocated += ((newCapacity - chatCapacity)* sizeof(Chat*));
   chatCapacity = newCapacity;
-}
-
-Usr ** Usr::getRequests(){
-  return requests;
-}
-
-size_t Usr::getRequestCount() const {
-  return requestCount;
 }
 
 void Usr::addRequest(Usr* newRequest) {
@@ -232,7 +176,7 @@ void Usr::resizeRequests() {
     throw;
   }
 
-  for (size_t i = 0; i < requestCount; ++i)               auxRequests[i] = requests[i];
+  for (size_t i = 0; i < requestCount; ++i)           auxRequests[i] = requests[i];
   for (size_t i = requestCount; i < newCapacity; ++i) auxRequests[i] = nullptr;
 
   delete[] requests;
@@ -269,14 +213,6 @@ void Usr::removeRequest(Usr* targetRequest) {
   }
 }
 
-const Album* const* Usr::getAlbums() const {
-  return albums;
-}
-
-size_t Usr::getAlbumCount() const {
-  return albumCount;
-}
-
 void Usr::addAlbum(Album* newAlbum) {
   if (albumCount >= albumCapacity) {
     resizeAlbums();
@@ -296,8 +232,8 @@ void Usr::resizeAlbums() {
     throw;
   }
 
-  for (size_t i = 0; i < albumCount; ++i)              auxAlbums[i] = albums[i];
-  for (size_t i = albumCount; i < newCapacity; ++i)  auxAlbums[i] = nullptr;
+  for (size_t i = 0; i < albumCount; ++i)           auxAlbums[i] = albums[i];
+  for (size_t i = albumCount; i < newCapacity; ++i) auxAlbums[i] = nullptr;
 
   delete[] albums;
   albums = auxAlbums;

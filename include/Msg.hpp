@@ -12,27 +12,35 @@ class Msg {
   public:
     Msg() = delete;
 
-    Msg(const Usr* sender, const Date& sentDate, const std::string& text);
+    Msg(const Usr* sender, const Date& sentDate, const std::string& text, bool isRead = false);
 
     Msg(const Msg& other) = delete;
 
     ~Msg();
 
-    void setSentDate(const Date& sentDate);
-    const Date& getSentDate() const;
+    const Date& getSentDate() const {
+      return sentDate;
+    }
 
-    void setText(const std::string& newText);
-    const std::string& getText() const;
+    const std::string& getText() const {
+      return text;
+    }
 
-    void setSender(const Usr* newSender);
-    const Usr* getSender() const;
+    const Usr* getSender() const {
+      return sender;
+    }
 
     void setIsRead(bool isRead);
-    bool getIsRead() const;
+
+    bool getIsRead() const {
+      return isRead;
+    }
 
     size_t getMemoryUsage() const;
 
-    static size_t getTotalMemoryUsage();
+    static size_t getTotalMemoryUsage() {
+      return totalMemoryAllocated;
+    }
 
     Msg& operator=(const Msg& other) = delete;
 
