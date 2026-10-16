@@ -29,27 +29,27 @@ class Date {
 
     //#### GETTERS ||>
 
-    inline unsigned short getYear() const {
+    unsigned short getYear() const {
       return year;
     }
 
-    inline unsigned char getMonth() const {
+    unsigned char getMonth() const {
       return month;
     }
 
-    inline unsigned char getDay() const {
+    unsigned char getDay() const {
       return day;
     }
 
-    inline unsigned char getHour() const {
+    unsigned char getHour() const {
       return hour;
     }
 
-    inline unsigned char getMinute() const {
+    unsigned char getMinute() const {
       return minute;
     }
 
-    inline unsigned char getSecond() const {
+    unsigned char getSecond() const {
       return second;
     }
 
@@ -79,19 +79,19 @@ class Date {
     bool operator==(const Date& other) const;
     bool operator<(const Date& other) const;
 
-    inline bool operator!=(const Date& other) const {
+    bool operator!=(const Date& other) const {
       return !(*this == other);
     }
 
-    inline bool operator>=(const Date& other) const {
+    bool operator>=(const Date& other) const {
       return !(*this < other);
     }
 
-    inline bool operator>(const Date& other) const {
+    bool operator>(const Date& other) const {
       return (other < *this);
     }
 
-    inline bool operator<=(const Date& other) const {
+    bool operator<=(const Date& other) const {
       return !(*this > other);
     }
 

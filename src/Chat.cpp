@@ -58,14 +58,6 @@ Chat::~Chat() {
   totalMemoryAllocated -= (sizeof(Chat)+(msgCapacity * sizeof(Msg*)));
 }
 
-const Msg* const* Chat::getMsgs() const {
-  return msgs;
-}
-
-size_t Chat::getMsgCount() const {
-  return msgCount;
-}
-
 void Chat::resizeMsgs() {
   size_t newCapacity = msgCapacity * 2;
  
@@ -85,14 +77,6 @@ void Chat::resizeMsgs() {
 
   totalMemoryAllocated += ((newCapacity - msgCapacity) * sizeof(Msg*));
   msgCapacity = newCapacity;
-}
-
-const Usr* Chat::getUsrA() const {
-  return usrA;
-}
-
-const Usr* Chat::getUsrB() const {
-  return usrB;
 }
 
 const Usr* Chat::getOtherUsr(const Usr* currentUsr) const {

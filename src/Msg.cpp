@@ -21,48 +21,11 @@ Msg::~Msg() {
   totalMemoryAllocated -= getMemoryUsage();
 }
 
-void Msg::setSentDate(const Date& newSentDate) {
-  sentDate = newSentDate; 
-}
-
-const Date& Msg::getSentDate() const {
-  return sentDate;
-}
-
-void Msg::setText(const std::string& newText) { 
-  size_t oldUsage = getMemoryUsage();
-  
-  text = newText;
-  
-  totalMemoryAllocated = (totalMemoryAllocated - oldUsage) + getMemoryUsage();
-}
-
-const std::string& Msg::getText() const {
-  return text;
-}
-
-void Msg::setSender(const Usr* newSender) {
-  sender = newSender;
-}
-
-const Usr* Msg::getSender() const {
-  return sender;
-}
-
 void Msg::setIsRead(bool newIsRead) {
   isRead = newIsRead;
 }
-
-bool Msg::getIsRead() const {
-  return isRead;
-}
-
 size_t Msg::getMemoryUsage() const {
   return sizeof(*this) + text.capacity();
-}
-
-size_t Msg::getTotalMemoryUsage() {
-  return totalMemoryAllocated;
 }
 
 std::ostream& operator<<(std::ostream& os, const Msg& targetMsg) {

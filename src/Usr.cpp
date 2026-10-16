@@ -88,49 +88,8 @@ Usr::~Usr() {
   totalMemoryAllocated -= (albumCapacity * sizeof(Album*));
 }
 
-const std::string& Usr::getPfpPath() const {
-  return pfpPath;
-}
-
-const std::string& Usr::getUsrname() const {
-  return usrname;
-}
-
-const std::string& Usr::getEmail() const {
-  return email;
-}
-
 bool Usr::checkPwd(const std::string& inputPwd) const {
   return inputPwd == pwd;
-}
-
-const std::string& Usr::getPwd() const {
-  return pwd;
-}
-
-
-const std::string& Usr::getCity() const {
-  return city;
-}
-
-const std::string& Usr::getCountry() const {
-  return country;
-}
-
-const Date& Usr::getDob() const {
-  return dob;
-}
-
-const Date& Usr::getJoinDate() const {
-  return joinDate;
-}
-
-const Usr* const* Usr::getFriends() const {
-  return friends;
-}
-
-size_t Usr::getFriendCount() const {
-  return friendCount;
 }
 
 void Usr::addFriend(Usr* newFriend) { 
@@ -169,14 +128,6 @@ void Usr::resizeFriends() {
   friendCapacity = newCapacity;
 }
 
-const Chat* const* Usr::getChats() const {
-  return chats;
-}
-
-size_t Usr::getChatCount() const {
-  return chatCount;
-}
-
 void Usr::addChat(Chat* newChat) {
   if (chatCount >= chatCapacity) {
     resizeChats();
@@ -204,14 +155,6 @@ void Usr::resizeChats() {
 
   totalMemoryAllocated += ((newCapacity - chatCapacity)* sizeof(Chat*));
   chatCapacity = newCapacity;
-}
-
-Usr** Usr::getRequests() const {
-  return requests;
-}
-
-size_t Usr::getRequestCount() const {
-  return requestCount;
 }
 
 void Usr::addRequest(Usr* newRequest) {
@@ -268,14 +211,6 @@ void Usr::removeRequest(Usr* targetRequest) {
       return;
     }
   }
-}
-
-const Album* const* Usr::getAlbums() const {
-  return albums;
-}
-
-size_t Usr::getAlbumCount() const {
-  return albumCount;
 }
 
 void Usr::addAlbum(Album* newAlbum) {

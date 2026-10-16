@@ -17,11 +17,25 @@ class Chat {
 
     ~Chat();
   
-    const Msg* const* getMsgs() const;
-    size_t getMsgCount() const;
+    Msg** getMsgs() {
+      return msgs;
+    }
+    const Msg* const* getMsgs() const {
+      return msgs;
+    }
 
-    const Usr* getUsrA() const;
-    const Usr* getUsrB() const;
+    size_t getMsgCount() const {
+      return msgCount;
+    }
+
+    const Usr* getUsrA() const {
+      return usrA;
+    }
+
+    const Usr* getUsrB() const {
+      return usrB;
+    }
+
     const Usr* getOtherUsr(const Usr* currentUsr) const;
 
     bool getIsRead() const;
@@ -30,7 +44,9 @@ class Chat {
     
     bool consumeUnread(const Usr* currentUsr);
 
-    static size_t getTotalMemoryAllocated();
+    static size_t getTotalMemoryAllocated() {
+      return totalMemoryAllocated;
+    }
 
     Chat& operator=(const Chat& other) = delete;
 

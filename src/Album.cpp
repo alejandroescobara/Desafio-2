@@ -38,10 +38,6 @@ Album::~Album() {
   totalMemoryAllocated -= sizeof(Album)+(photoCapacity * sizeof(Photo*));
 }
 
-const Photo* const* Album::getPhotos() const {
-    return photos;
-}
-
 void Album::resizePhotos() {
   size_t newCapacity = photoCapacity * 2;
 
@@ -64,30 +60,10 @@ void Album::resizePhotos() {
   photoCapacity = newCapacity;
 }
 
-size_t Album::getPhotoCount() const {
-    return photoCount;
-}
-
-const std::string& Album::getTitle() const {
-    return title;
-}
-
-char Album::getVisibility() const {
-    return visibility;
-}
-
-const std::string& Album::getPath() const {
-    return path;
-}
-
 Album& Album::operator+=(Photo* newPhoto) {
   if (photoCount >= photoCapacity) {
     resizePhotos();
   }
   photos[photoCount++] = newPhoto;
   return *this;
-}
-
-size_t Album::getTotalMemoryAllocated() const {
-    return totalMemoryAllocated;
 }

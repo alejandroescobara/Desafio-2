@@ -32,14 +32,6 @@ Photo::~Photo(){
     totalMemoryAllocated -= sizeof(Photo)+(likeCapacity * sizeof(Usr*));
 };
 
-const std::string& Photo::getTitle()const{
-    return title;
-}
-
-const std::string& Photo::getPath()const{
-    return path;
-}
-
 bool Photo::isInLikes(const Usr* targetUsr) const{
   for(size_t i = 0; i < likeCount; i++){
     if (likes[i] == targetUsr) {
@@ -102,20 +94,4 @@ void Photo::toggleLike(Usr* targetUsr){
 
 size_t Photo::getLikeCount() const {
   return likeCount;
-}
-
-const Usr* const* Photo::getLikes() const {
-  return likes;
-}
-
-const Date& Photo::getDate() const {
-  return date;
-}
-
-size_t Photo::getFileSize() const{
-    return fileSize;
-}
-
-size_t Photo::getTotalMemoryAllocated() const{ 
-  return totalMemoryAllocated;
 }

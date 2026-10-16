@@ -14,24 +14,38 @@ class Photo{
 
     ~Photo();
 
-    void setTitle(const std::string& title);
-    const std::string& getTitle() const;
+    const std::string& getTitle() const {
+      return title;
+    }
 
-    void setPath(const std::string& path);
-    const std::string& getPath() const;
+    const std::string& getPath() const {
+      return path;
+    }
 
     bool isInLikes(const Usr* targetUsr) const;
     void toggleLike(Usr* targetUsr);
     size_t getLikeCount() const;
-    const Usr* const* getLikes() const;
 
-    void setDate(const Date& date);
-    const Date& getDate() const;
 
-    void setFileSize(size_t fileSize);
-    size_t getFileSize() const;
+    Usr** getLikes() {
+      return likes;
+    }
 
-    size_t getTotalMemoryAllocated() const;
+    const Usr* const* getLikes() const {
+      return likes;
+    }
+
+    const Date& getDate() const {
+      return date;
+    }
+
+    size_t getFileSize() const {
+      return fileSize;
+    }
+
+    static size_t getTotalMemoryAllocated() {
+      return totalMemoryAllocated;
+    }
 
     Photo& operator=(const Photo& other) = delete;
 
