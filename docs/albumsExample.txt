@@ -1,10 +1,10 @@
 #usrname1
 @albumtitle1;visibility
-phototitle1;date;fileSize;[likeUsrname1,likeUsrname2,likeUsrname3]
-phototitle2;date;fileSize;[likeUsrname1,likeUsrname2]
+phototitle1;date;fileSize;likeUsrname1,likeUsrname2,likeUsrname3
+phototitle2;date;fileSize;likeUsrname1,likeUsrname2
 @albumtitle2;visibility
-phototitle1;date;fileSize;[likeUsrname1,likeUsrname2,likeUsrname3]
+phototitle1;date;fileSize;likeUsrname1,likeUsrname2,likeUsrname3
 #usrname2
 @albumtitle1;visibility
-phototitle1date;fileSize;[likeUsrname1,likeUsrname2,likeUsrname3]
-phototitle2;date;fileSize;[likeUsrname1,likeUsrname2]
+phototitle1;date;fileSize;likeUsrname1,likeUsrname2,likeUsrname3
+phototitle2;date;fileSize;likeUsrname1,likeUsrname2
