@@ -205,7 +205,7 @@ void Usr::resizeChats() {
   chatCapacity = newCapacity;
 }
 
-const Usr* const* Usr::getRequests() const {
+Usr ** Usr::getRequests(){
   return requests;
 }
 
