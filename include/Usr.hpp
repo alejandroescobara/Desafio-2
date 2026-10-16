@@ -57,7 +57,7 @@ class Usr {
     size_t getChatCount() const;
     void addChat(Chat* newChat);
 
-    const Usr* const* getRequests() const;
+    Usr** getRequests() const;
     size_t getRequestCount() const;
     void addRequest(Usr* newRequest);
 
