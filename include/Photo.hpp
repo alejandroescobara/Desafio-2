@@ -23,7 +23,7 @@ class Photo{
     bool isInLikes(const Usr* targetUsr) const;
     void toggleLike(Usr* targetUsr);
     size_t getLikeCount() const;
-
+    const Usr* const* getLikes() const;
 
     void setDate(const Date& date);
     const Date& getDate() const;

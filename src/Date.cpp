@@ -1,7 +1,6 @@
 #include "Date.hpp"
 
 #include <ctime>
-#include <iomanip>
 
 size_t Date::activeInstances = 0;
 
@@ -23,6 +22,31 @@ Date::Date(unsigned short year,
   if (!isValidDate(year, month, day, hour, minute, second)) {
     throw std::invalid_argument("ERROR: FAILED TO CREATE OBJECT (INVALID DATE)");
   }
+  ++activeInstances;
+}
+
+static unsigned int parseNumber(const std::string& str, unsigned int start, unsigned int length) {
+  unsigned int number = 0;
+
+  for (unsigned int i = start; i < start + length; ++i) {
+    number = number * 10 + static_cast<unsigned int>(str[i] - '0');
+  }
+
+  return number;
+}
+
+Date::Date(const std::string& str, bool hasTime)
+    : year(static_cast<unsigned short>(parseNumber(str, 0, 4))),
+      month(static_cast<unsigned char>(parseNumber(str, 4, 2))),
+      day(static_cast<unsigned char>(parseNumber(str, 6, 2))),
+      hour(static_cast<unsigned char>(hasTime ? parseNumber(str, 8, 2) : 0)),
+      minute(static_cast<unsigned char>(hasTime ? parseNumber(str, 10, 2) : 0)),
+      second(static_cast<unsigned char>(hasTime ? parseNumber(str, 12, 2) : 0)) {
+
+  if (!isValidDate(year, month, day, hour, minute, second)) {
+    throw std::invalid_argument("ERROR: FAILED TO CREATE OBJECT (INVALID DATE)");
+  }
+
   ++activeInstances;
 }
 
@@ -63,6 +87,30 @@ bool Date::isValidDate(unsigned short year,
   }
 
   return (day >= 1 && day <= daysInMonth);
+}
+
+static void appendNumber(std::string& str, unsigned int number, unsigned int width) {
+  
+  if (number < 10 && width >= 2)   str += '0';
+  if (number < 100 && width >= 3)  str += '0';
+  if (number < 1000 && width >= 4) str += '0';
+  
+  str += std::to_string(number);
+}
+
+std::string Date::toString(bool hasTime) const {
+  std::string str;
+
+  appendNumber(str, year, 4);
+  appendNumber(str, static_cast<unsigned int>(month), 2);
+  appendNumber(str, static_cast<unsigned int>(day), 2);
+
+  if (hasTime) {
+    appendNumber(str, static_cast<unsigned int>(hour), 2);
+    appendNumber(str, static_cast<unsigned int>(minute), 2);
+    appendNumber(str, static_cast<unsigned int>(second), 2);
+  }
+  return str;
 }
 
 Date Date::now() {
@@ -118,13 +166,29 @@ bool Date::operator<(const Date& other) const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Date& date) {
-  os << std::setfill('0')
-     << std::setw(4) << date.year << "-"
-     << std::setw(2) << static_cast<unsigned int>(date.month) << "-"
-     << std::setw(2) << static_cast<unsigned int>(date.day) << " "
-     << std::setw(2) << static_cast<unsigned int>(date.hour) << ":"
-     << std::setw(2) << static_cast<unsigned int>(date.minute) << ":"
-     << std::setw(2) << static_cast<unsigned int>(date.second);
+  std::string str;
+
+  appendNumber(str, date.year, 4);
+  os << str << "-";
+  str.clear();
+
+  appendNumber(str, static_cast<unsigned int>(date.month), 2);
+  os << str << "-";
+  str.clear();
+
+  appendNumber(str, static_cast<unsigned int>(date.day), 2);
+  os << str << " ";
+  str.clear();
+
+  appendNumber(str, static_cast<unsigned int>(date.hour), 2);
+  os << str << ":";
+  str.clear();
+
+  appendNumber(str, static_cast<unsigned int>(date.minute), 2);
+  os << str << ":";
+  str.clear();
+
+  appendNumber(str, static_cast<unsigned int>(date.second), 2);
+  os << str;
   return os;
 }
-

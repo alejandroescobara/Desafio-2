@@ -1,5 +1,6 @@
 #include "Usr.hpp"
 
+#include "dataManager.hpp"
 #include <stdexcept>
 
 #include "Chat.hpp"
@@ -195,8 +196,8 @@ void Usr::resizeChats() {
     throw;
   }
 
-  for (size_t i = 0; i < chatCount; ++i)              auxChats[i] = chats[i];
-  for (size_t i = chatCount; i < newCapacity; ++i)   auxChats[i] = nullptr;
+  for (size_t i = 0; i < chatCount; ++i)           auxChats[i] = chats[i];
+  for (size_t i = chatCount; i < newCapacity; ++i) auxChats[i] = nullptr;
 
   delete[] chats;
   chats = auxChats;
@@ -232,7 +233,7 @@ void Usr::resizeRequests() {
     throw;
   }
 
-  for (size_t i = 0; i < requestCount; ++i)               auxRequests[i] = requests[i];
+  for (size_t i = 0; i < requestCount; ++i)           auxRequests[i] = requests[i];
   for (size_t i = requestCount; i < newCapacity; ++i) auxRequests[i] = nullptr;
 
   delete[] requests;
@@ -296,8 +297,8 @@ void Usr::resizeAlbums() {
     throw;
   }
 
-  for (size_t i = 0; i < albumCount; ++i)              auxAlbums[i] = albums[i];
-  for (size_t i = albumCount; i < newCapacity; ++i)  auxAlbums[i] = nullptr;
+  for (size_t i = 0; i < albumCount; ++i)           auxAlbums[i] = albums[i];
+  for (size_t i = albumCount; i < newCapacity; ++i) auxAlbums[i] = nullptr;
 
   delete[] albums;
   albums = auxAlbums;

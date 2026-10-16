@@ -19,8 +19,7 @@ class Date {
          unsigned char  minute=0,
          unsigned char  second=0);
 
-    inline Date(const Date& other)
-        : Date(other.year, other.month, other.day, other.hour, other.minute, other.second) {}
+    Date(const std::string& str, bool hasTime);
 
     //#### DESTRUCTOR ||>
 
@@ -66,6 +65,8 @@ class Date {
                  unsigned char hour   =0,
                  unsigned char minute =0,
                  unsigned char second =0);
+
+    std::string toString(bool hasTime) const;
 
     static size_t getMemoryUsage();
 

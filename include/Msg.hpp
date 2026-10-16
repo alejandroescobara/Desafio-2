@@ -12,7 +12,7 @@ class Msg {
   public:
     Msg() = delete;
 
-    Msg(const Usr* sender, const Date& sentDate, const std::string& text);
+    Msg(const Usr* sender, const Date& sentDate, const std::string& text, bool isRead = false);
 
     Msg(const Msg& other) = delete;
 

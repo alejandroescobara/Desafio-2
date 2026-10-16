@@ -104,6 +104,10 @@ size_t Photo::getLikeCount() const {
   return likeCount;
 }
 
+const Usr* const* Photo::getLikes() const {
+  return likes;
+}
+
 const Date& Photo::getDate() const {
   return date;
 }

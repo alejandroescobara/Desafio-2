@@ -6,11 +6,7 @@ namespace validators {
 
   bool isValidMsgText(const std::string& text);
   
-  template <typename T>
-  bool isValidMemoryReservation(T ptr) {  
-    return (ptr == nullptr)? true : false;
-  }
-
+  bool fileExists(const char* filePath);
   //bool isValidEmail();
 
   //bool isValidUsrname();

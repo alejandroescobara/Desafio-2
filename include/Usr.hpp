@@ -4,6 +4,7 @@
 #include <cstddef>
 
 #include "Date.hpp"
+#include "dataManager.hpp"
 
 class Chat;
 
@@ -76,8 +77,10 @@ class Usr {
     Usr& operator=(const Usr& other) = delete;
 
     friend std::ostream& operator<<(std::ostream& os, const Usr& usr); //<- printProfile
+                                                                       
+    friend bool dataManager::writeUsers(Usr** masterArrayUsrs, const size_t masterUsrCount, const char* filePath);
 
-    //NOTE: el modulo systemManager queda encargado de: sendMsg y sendRequest
+    //NOTE: el modulo core o udeaBook queda encargado de: sendMsg y sendRequest
     
     //NOTE: el modulo udeaBook queda encargado de: printRequests, printRandFriend,
     //printSuggestions

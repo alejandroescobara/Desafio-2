@@ -6,10 +6,11 @@ size_t Msg::totalMemoryAllocated = 0;
 
 Msg::Msg(const Usr* sender,
          const Date& sentDate,
-         const std::string& text)
+         const std::string& text,
+         bool isRead)
    :sender(sender),
     sentDate(sentDate),
-    isRead(false),
+    isRead(isRead),
     text(text) {
 //---------
 

@@ -5,7 +5,7 @@
 class Album{
   public:
     
-    Album(const std::string& title, const std::string& path, char visibility = 'P', size_t initialPhotoCapacity = 8);
+    Album(const std::string& title, const std::string& ownerUsrname, char visibility = 'P', size_t initialPhotoCapacity = 8);
     
     ~Album();
 
