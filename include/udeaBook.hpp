@@ -1,10 +1,7 @@
 #pragma once
 #include "Usr.hpp"
-#include "Album.hpp"
 #include "Chat.hpp"
-#include "Photo.hpp"
 #include "Msg.hpp"
-#include "Date.hpp"
 
 namespace udeaBook{
 
@@ -28,7 +25,7 @@ namespace udeaBook{
 
     void profileViewer(Usr * currentUsr);
 
-    void msgManager(Usr* currentUsr, Chat ** totalChats, size_t numChats);
+    void msgManager(Usr* currentUsr, Chat ** &totalChats, size_t &numChats, size_t &chatsCapacity);
 
     void viewSugestions(Usr * currentUsr, Usr ** totalUsr, size_t numUsr);
 }

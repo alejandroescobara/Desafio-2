@@ -11,7 +11,7 @@
 #include "Album.hpp"
 #include "Photo.hpp"
 #include "Date.hpp"
-
+#include "core.hpp"
 #include "validators.hpp"
 
 namespace dataManager {
@@ -59,7 +59,7 @@ namespace dataManager {
 
 
         Usr* currentUsr = new Usr(usrname, email, pwd, city, country, dob, joinDate);
-        if (masterUsrCount >= masterUsrCapacity) resizeMasterArrayUsrs(); //TODO: <- core.cpp
+        if (masterUsrCount >= masterUsrCapacity) core::resizeMasterArrayUsrs(masterArrayUsrs,masterUsrCapacity,masterUsrCount); //TODO: <- core.cpp
         masterArrayUsrs[masterUsrCount++] = currentUsr;
 
       }
@@ -84,8 +84,7 @@ namespace dataManager {
         std::string friendUsrname;
 
         while (std::getline(ssFriends, friendUsrname, ',')) {
-          Usr* friendPtr = findUsrByName(masterArrayUsrs, masterUsrCount, friendUsrname); //TODO <- core.cpp
-          currentUsr->addFriend(friendPtr);
+          Usr* friendPtr = core::usrNameSearch(masterArrayUsrs,friendUsrname,masterUsrCount);
         }
 
         std::getline(ss, requestsStr);
@@ -94,7 +93,7 @@ namespace dataManager {
         std::string requestUsrname;
 
         while (std::getline(ssRequests, requestUsrname, ',')) {
-          Usr* requestPtr = findUsrByName(masterArrayUsrs, masterUsrCount, requestUsrname); //TODO <- core.cpp
+          Usr* requestPtr = core::usrNameSearch(masterArrayUsrs,requestUsrname,masterUsrCount);
           currentUsr->addRequest(requestPtr);
         }
       }
@@ -182,7 +181,7 @@ namespace dataManager {
             std::string likeUsrname;
 
             while (std::getline(ssLikes, likeUsrname, ',')) {
-              Usr* likePtr = findUsrByName(masterArrayUsrs, masterUsrCount, likeUsrname); //TODO <- core.cpp
+              Usr* likePtr = core::usrNameSearch(masterArrayUsrs,likeUsrname,masterUsrCount);
               currentPhoto->toggleLike(likePtr);
             }
         }
@@ -221,9 +220,9 @@ namespace dataManager {
 
         if (line[0] == '#') {
           std::getline(ss, usrnameA, ';');
-          currentUsrA = findUsrByName(masterArrayUsrs, masterUsrCount, usrnameA); //TODO <- core.cpp
+          currentUsrA = core::usrNameSearch(masterArrayUsrs, usrnameA, masterUsrCount); //TODO <- core.cpp
           std::getline(ss, usrnameB); 
-          currentUsrB = findUsrByName(masterArrayUsrs, masterUsrCount, usrnameB); //TODO <- core.cpp
+          currentUsrB = core::usrNameSearch(masterArrayUsrs, usrnameB, masterUsrCount); //TODO <- core.cpp
 
           currentChat = new Chat(currentUsrA, currentUsrB);
 
@@ -231,7 +230,7 @@ namespace dataManager {
           currentUsrB->addChat(currentChat);
 
 
-          if (masterChatCount >= masterChatCapacity) resizeMasterArrayChats(); //TODO: <- core.cpp
+          if (masterChatCount >= masterChatCapacity) core::resizeMasterArrayChats(); //TODO: <- core.cpp
           masterArrayChats[masterChatCount++] = currentChat;
         }
         else {

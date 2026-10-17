@@ -3,6 +3,7 @@
 #include <iostream>
 #include <random>
 
+#include "core.hpp"
 #include "Usr.hpp"
 #include "Album.hpp"
 #include "Chat.hpp"
@@ -16,31 +17,13 @@ namespace udeaBook{
 
     //aqui iran las funciones auxiliares
 
-        Usr * usrNameSearch(Usr ** totalUsr, std::string usrName, size_t numUsr){
-            size_t init = 0;
-            size_t end = numUsr - 1;
-            size_t mid = 0;
-            while(init <= end){
-                mid = init + ((end - init)/ 2);
-                if((totalUsr[mid])->getUsrname() == usrName){
-                    return totalUsr[mid];
-                }
-                if((totalUsr[mid])->getUsrname() < usrName){
-                    if (mid == 0){return nullptr;}
-                    init = mid + 1;
-                }
-                else{
-                    end = mid - 1;
-                }
-            }
-            return nullptr;
-        }
 
-        void carousel(const Album * album, Usr*currentUsr, const Usr * albumUser){
+
+        void carousel(Album * album, Usr*currentUsr, const Usr * albumUser){
             char election = ' ';
             size_t numPhotos = album->getPhotoCount();
-            if(numPhotos > 1){
-                const Photo * const * Photos = album->getPhotos();
+            if(numPhotos > 0){
+                Photo ** Photos = album->getPhotos();
                 size_t indexPhoto = 0;
                 while(election != '1'){
 
@@ -65,7 +48,7 @@ namespace udeaBook{
                         ((indexPhoto == 0)? indexPhoto = numPhotos - 1 : indexPhoto--);
                         break;
                     case '4':
-                        //Photos[indexPhoto]->toggleLike(currentUsr);//<----- corregir conflicto de referencias
+                        Photos[indexPhoto]->toggleLike(currentUsr);//<----- corregir conflicto de referencias
                         break;
                     default:
                         std::cout<<"\n\n                ---ingrese un valor valido---\n\n";
@@ -78,36 +61,14 @@ namespace udeaBook{
             }
         }
 
-        Chat * chatSearch(const std::string usrName1, const std::string usrName2, Chat** totalChats, size_t numChats){
-            std::string names = ((usrName1 > usrName2) ? (usrName1+'#'+usrName2) : (usrName2+'#'+usrName1));
 
-            size_t init = 0;
-            size_t end = numChats - 1;
-            size_t mid = 0;
-            while(init <= end){
-                mid = init + ((end - init)/ 2);
-                const std::string midNames = totalChats[mid]->getUsrA()->getUsrname() + '#' + totalChats[mid]->getUsrB()->getUsrname();
-                if(midNames == names){ // nombreA#nombreB == usrname1#usrname2
-                    return totalChats[mid];
-                }
-                if(midNames < names){
-                    init = mid + 1;
-                }
-                else{
-                    if (mid == 0) return nullptr;
-                    end = mid - 1;
-                }
-            }
-            return nullptr;
-        }
 
         void sendMsg(Usr * currentUsr, Chat * chat){
 
             std::string newMsgText;
             std::cout<<"ingrese el mensaje a mandar -- 512 caracteres max--:\n ";
-            std::cin.ignore();
             std::getline(std::cin, newMsgText);
-            if(newMsgText.length()<513 && newMsgText.length() > 1){
+            if(newMsgText.length()<513 && newMsgText.length() > 0){
                 Msg * newMsg = new Msg(currentUsr, Date::now(),newMsgText,false);
                 *chat += newMsg;
             }
@@ -159,32 +120,43 @@ namespace udeaBook{
             currentChat->printAndMarkMsgs(currentUsr,Date(date1,true),Date(date2,true));
         }
 
-        void interfaceSugestions(short k, Usr ** listaUsr,Usr * currentUsr){
+        void interfaceSugestions(size_t k, Usr ** listaUsr,Usr * currentUsr){
             std::string usrName;
-            bool isSend = false;
-            std::cout<<"sugerencias de amistad: ";
-            for(short i = 0; i < k; i++){
-                std::cout<<i+1<<".-"<<listaUsr[i]->getUsrname()<<"\n";
-            }
-            std::cout<<"                         menu de opciones:\n\n"
-                     <<"                 1.-enviar solicituded de amistad\n"
-                     <<"                           2.-retroceder\n"
-                     <<"                            su opcion: ";
-            std::cout<<"\n\ningrese el usuario al que enviar la solicitud: ";
-            std::cin.ignore();
-            std::getline(std::cin, usrName);
-            for(short i = 0; i < k; i++){
-                if(listaUsr[i]->getUsrname() == usrName){
-                    listaUsr[i]->addRequest(currentUsr);
-                    isSend = true;
-                    break;
+            char election = '0';
+            while(election != '2'){
+                bool isSend = false;
+                std::cout<<"sugerencias de amistad: ";
+                for(short i = 0; i < k; i++){
+                    std::cout<<i+1<<".-"<<listaUsr[i]->getUsrname()<<"\n";
                 }
-            }
-            if(isSend){
-                std::cout<<"\n\n+++se envio la solicitud+++\n\n";
-            }
-            else{
-                std::cout<<"\n\n---no se encontro el usuario en las sugerencias---\n\n";
+                std::cout<<"                         menu de opciones:\n\n"
+                         <<"                 1.-enviar solicituded de amistad\n"
+                         <<"                           2.-retroceder\n"
+                         <<"                            su opcion: ";
+                std::cin>>election;
+                if(election == '1'){
+                    std::cout<<"\n\ningrese el usuario al que enviar la solicitud: ";
+                    std::cin.ignore();
+                    std::getline(std::cin, usrName);
+                    for(short i = 0; i < k; i++){
+                        if(listaUsr[i]->getUsrname() == usrName){
+                            listaUsr[i]->addRequest(currentUsr);
+                            isSend = true;
+                            break;
+                        }
+                    }
+                    if(isSend){
+                        std::cout<<"\n\n+++se envio la solicitud+++\n\n";
+                    }
+                    else{
+                        std::cout<<"\n\n---no se encontro el usuario en las sugerencias---\n\n";
+                    }
+                }
+                else{
+                    if(election != '2'){
+                        std::cout<<"\n\n---ingrese un valor valido---\n\n";
+                    }
+                }
             }
         }
 
@@ -207,14 +179,12 @@ namespace udeaBook{
         Usr * currentUser;
         std::cout<<"            bienvenido a Ude@book\n\n"
                   <<"    ingrese el nombre de usuario: ";
-        std::cin.ignore();
         std::getline(std::cin, usrNameTry);
         std::cout<<"    ingrese la contraseña: ";
-        std::cin.ignore();
         std::getline(std::cin, pwdTry);
 
-        currentUser = usrNameSearch(totalUsr,usrNameTry,numUsr);
-        if(currentUser == nullptr){
+        currentUser = core::usrNameSearch(totalUsr,usrNameTry,numUsr);
+        if(currentUser == nullptr || !(currentUser->checkPwd(pwdTry))){
             std::cout<<"\n\n----nombre de usuario o contraseña erroneos---\n\n";
             return nullptr;
         }
@@ -288,14 +258,14 @@ namespace udeaBook{
                 else{
                     if (ciclos == 0){
                         for(unsigned char i = 0; i<numFriends; i++){
-                            std::cout<<"foto de perfil "<<ptrFriends[i]->getUsrname()<<":"<<ptrFriends[i]->getPfpPath();
+                            std::cout<<"foto de perfil "<<ptrFriends[i]->getUsrname()<<":"<<ptrFriends[i]->getPfpPath()<<"\n";
                         }
                     }
                     else{
                         if(numFriendsAux > 0){
                             for(unsigned char i = 0; i < numFriends; i++){
                                 if(ponderedFriends[i] != 0){
-                                    std::cout<<"foto de perfil "<<ptrFriends[i]->getUsrname()<<":"<<ptrFriends[i]->getPfpPath();
+                                    std::cout<<"foto de perfil "<<ptrFriends[i]->getUsrname()<<":"<<ptrFriends[i]->getPfpPath()<<"\n";
                                 }
                             }
                         }
@@ -348,9 +318,10 @@ namespace udeaBook{
                 std::cout<<"ingrese el nombre de usuario al que desea mandar la solicitud: ";
                 std::cin.ignore();
                 std::getline(std::cin, usrName);
-                requestUsr = usrNameSearch(totalUsr,usrName,numUsr);
+                requestUsr = core::usrNameSearch(totalUsr,usrName,numUsr);
 
                 if(requestUsr != nullptr){
+                    requestUsr->addRequest(currentUsr);
                     std::cout<<"\n\n+++se mando la solicitud de amistad con exito+++\n\n";
                 }
                 else{
@@ -401,8 +372,8 @@ namespace udeaBook{
     void profileViewer(Usr * currentUsr){
 
         std::string usrName;
-        const Usr * const * friends = currentUsr->getFriends();
-        const Usr * friend_ = nullptr;
+        Usr ** friends = currentUsr->getFriends();
+        Usr * friend_ = nullptr;
         size_t numFriends = currentUsr->getFriendCount();
         std::cout<<"\n\ningrese el amigo al que desea visitar el perfil: ";
         std::cin.ignore();
@@ -416,7 +387,7 @@ namespace udeaBook{
         }
         if (friend_ != nullptr){
             size_t numAlbums = friend_->getAlbumCount();
-            const Album * const * albums = friend_->getAlbums();
+            Album ** albums = friend_->getAlbums();
             std::string privacity;
             char election = '3';
 
@@ -465,7 +436,7 @@ namespace udeaBook{
         }
     }
 
-    void msgManager(Usr* currentUsr, Chat ** totalChats, size_t numChats){
+    void msgManager(Usr* currentUsr, Chat ** &totalChats, size_t &numChats, size_t &chatsCapacity){
         char election = ' ';
         while(election != '4'){
             std::cout<<"                         menu de opciones:\n\n"
@@ -475,35 +446,42 @@ namespace udeaBook{
                       <<"                           4.-retroceder\n"
                       <<"                            su opcion: ";
             std::cin>>election;
+            std::cin.ignore();
 
             std::string usrName;
-            const Usr * const * friends = currentUsr->getFriends();
-            const Usr * friend_ = nullptr;
+            Usr ** friends = currentUsr->getFriends();
+            Usr * friend_ = nullptr;
             size_t numFriends = currentUsr->getFriendCount();
-            std::cout<<"\n\ningrese el amigo con el que desea mensajear: ";
-            std::cin.ignore();
-            std::getline(std::cin, usrName);
 
-            for(size_t i = 0; i < numFriends; i++){
-                if(friends[i]->getUsrname() == usrName){
-                    friend_ = friends[i];
-                    break;
-                }
-            }
+
 
             switch(election){
             case'1':{
+                std::cout<<"\n\ningrese el amigo con el que desea mensajear: ";
+                std::getline(std::cin, usrName);
+
+                for(size_t i = 0; i < numFriends; i++){
+                    if(friends[i]->getUsrname() == usrName){
+                        friend_ = friends[i];
+                        break;
+                    }
+                }
 
                 if (friend_ != nullptr){
-                    Chat * currentChat = chatSearch(currentUsr->getUsrname(),friend_->getUsrname(),totalChats, numChats);
+                    Chat * currentChat = core::chatSearch(currentUsr->getUsrname(),friend_->getUsrname(),totalChats, numChats);
                     if(currentChat != nullptr){
                         sendMsg(currentUsr, currentChat);
                     }
                     else{
                         std::cout<<"\n\n---no se encontro el chat--\n\n";
                         Chat * newChat = new Chat(currentUsr,friend_);
+
+                        totalChats = core::chatIncrust(chatsCapacity,numChats,totalChats,newChat);
+                        numChats++;
+
                         currentUsr->addChat(newChat);
-                        sendMsg(currentUsr, currentChat);
+                        friend_->addChat(newChat);
+                        sendMsg(currentUsr, newChat);
                     }
                 }
                 else{
@@ -514,7 +492,7 @@ namespace udeaBook{
             case'2':{
                 Usr ** totalFriends = currentUsr->getFriends();
                 for(size_t i = 0; i < numFriends; i++ ){
-                    Chat * chat = chatSearch(currentUsr->getUsrname(),totalFriends[i]->getUsrname(),totalChats,numChats);
+                    Chat * chat = core::chatSearch(currentUsr->getUsrname(),totalFriends[i]->getUsrname(),totalChats,numChats);
                     if(chat != nullptr){
                         chat->consumeUnread(currentUsr);
                     }
@@ -522,8 +500,18 @@ namespace udeaBook{
                 break;
             }
             case'3':
+                std::cout<<"\n\ningrese el amigo con el que desea mensajear: ";
+                std::getline(std::cin, usrName);
+
+                for(size_t i = 0; i < numFriends; i++){
+                    if(friends[i]->getUsrname() == usrName){
+                        friend_ = friends[i];
+                        break;
+                    }
+                }
+
                 if (friend_ != nullptr){
-                    Chat * currentChat = chatSearch(currentUsr->getUsrname(),friend_->getUsrname(),totalChats, numChats);
+                    Chat * currentChat = core::chatSearch(currentUsr->getUsrname(),friend_->getUsrname(),totalChats, numChats);
                     if(currentChat != nullptr){
                         seeMsgByDate(currentUsr,currentChat);
                     }
@@ -546,7 +534,7 @@ namespace udeaBook{
     }
 
     void viewSugestions(Usr * currentUsr, Usr ** totalUsr, size_t numUsr){
-        short k;
+        size_t k;
         std::cout<<"\n\ningrese el numero de sugerencias: ";
         std::cin>>k;
 
@@ -606,9 +594,6 @@ namespace udeaBook{
                 }
             }
         }
-        if(k < 0){
-            k = -k;
-        }
         if (k > used){
             k = used;
         }
@@ -641,10 +626,5 @@ namespace udeaBook{
 
     }
 }
-
-
-
-
-
 
 
