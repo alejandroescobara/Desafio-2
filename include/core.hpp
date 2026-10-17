@@ -11,10 +11,10 @@ namespace core{
 
     Chat * chatSearch(const std::string usrName1, const std::string usrName2, Chat** totalChats, size_t numChats);
 
-    Chat ** chatIncrust(size_t &chatsCapacity, size_t numChats,Chat **totalChats, Chat *newChat);
-
     void resizeMasterArrayUsrs(Usr ** &masterArrayUsrs,size_t &masterUsrcapacity, size_t numUsrs);
 
     void resizeMasterArrayChats(Chat ** &masterArraychats,size_t &masterchatscapacity, size_t numChats);
+
+    Chat ** chatIncrust(size_t &chatsCapacity, size_t numChats,Chat **totalChats, Chat *newChat);
 
 }
