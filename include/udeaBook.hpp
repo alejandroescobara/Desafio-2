@@ -29,4 +29,6 @@ namespace udeaBook{
     void profileViewer(Usr * currentUsr);
 
     void msgManager(Usr* currentUsr, Chat ** totalChats, size_t numChats);
+
+    void viewSugestions(Usr * currentUsr, Usr ** totalUsr, size_t numUsr);
 }
