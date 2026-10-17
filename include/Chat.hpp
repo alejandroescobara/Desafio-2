@@ -11,7 +11,7 @@ class Chat {
 
     Chat() = delete;
 
-    Chat(const Usr* usrA, const Usr* usrB, size_t initialMsgCapacity = 10);
+    Chat(const Usr* usrA, const Usr* usrB, size_t initialMsgCapacity = 8);
 
     Chat(const Chat& other) = delete;
 

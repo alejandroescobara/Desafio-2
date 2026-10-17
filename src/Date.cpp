@@ -161,7 +161,7 @@ bool Date::operator<(const Date& other) const {
   if (month  != other.month)   return month   < other.month;
   if (day    != other.day)     return day     < other.day;
   if (hour   != other.hour)    return hour    < other.hour;
-  if (day    != other.minute)  return minute  < other.minute;
+  if (minute != other.minute)  return minute  < other.minute;
   return second < other.second;
 }
 
