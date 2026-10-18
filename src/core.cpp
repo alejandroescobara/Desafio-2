@@ -1,11 +1,38 @@
 #include "core.hpp"
 #include <string>
-#include <cstddef>
+#include <cstddef>//para los conteos
+#include <cassert>//para los conteos
 
+#include "Date.hpp"
+#include "Album.hpp"
+#include "Usr.hpp"
 #include "Chat.hpp"
 #include "Msg.hpp"
 
 namespace core{
+
+    std::uint64_t totalIterations = 0;
+
+    void countIteration() noexcept {
+        ++totalIterations;
+    }
+
+    std::size_t currentMemoryBytes = 0;
+
+    void registerMemoryAllocation(std::size_t bytes) noexcept {
+        currentMemoryBytes += bytes;
+    }
+
+    void registerMemoryDeallocation(std::size_t bytes) noexcept {
+        assert(bytes <= currentMemoryBytes);
+        currentMemoryBytes -= bytes;
+    }
+
+    size_t totalMemory(){
+        return currentMemoryBytes + Usr::getTotalMemoryAllocated() + Chat::getTotalMemoryAllocated() +
+            Album::getTotalMemoryAllocated() + Photo::getTotalMemoryAllocated()+
+            Msg::getTotalMemoryUsage() + Date::getMemoryUsage();
+    }
 
     void initializerAll(Usr**&  masterArrayUsrs,
             size_t& masterUsrCount,
@@ -37,6 +64,7 @@ namespace core{
                 if (mid == 0){return nullptr;}
                 end = mid - 1;
             }
+            totalIterations++;
         }
         return nullptr;
     }
@@ -60,6 +88,7 @@ namespace core{
                 if (mid == 0) return nullptr;
                 end = mid - 1;
             }
+            totalIterations++;
         }
         return nullptr;
     }
@@ -77,7 +106,9 @@ namespace core{
         }
 
         for (size_t i = 0; i < masterUsrCount; ++i)           auxUsers[i] = masterArrayUsrs[i];
+        totalIterations+=masterUsrCount;
         for (size_t i = masterUsrCount; i < newCapacity; ++i) auxUsers[i] = nullptr;
+        totalIterations+=(newCapacity-masterUsrCount);
 
         delete[] masterArrayUsrs;
         masterArrayUsrs = auxUsers;
@@ -136,6 +167,7 @@ namespace core{
 
             totalChats[position] = totalChats[position - 1];
             position--;
+            totalIterations++;
         }
 
         totalChats[position] = newChat;

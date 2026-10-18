@@ -27,5 +27,5 @@ namespace udeaBook{
 
     void msgManager(Usr* currentUsr, Chat ** &totalChats, size_t &numChats, size_t &chatsCapacity);
 
-    void viewSugestions(Usr * currentUsr, Usr ** totalUsr, size_t numUsr);
+    void viewSugestions(Usr * currentUsr);
 }

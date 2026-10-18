@@ -3,6 +3,7 @@
 #include "dataManager.hpp"
 #include <stdexcept>
 
+#include "core.hpp"
 #include "Chat.hpp"
 #include "Album.hpp"
 #include "Photo.hpp"
@@ -53,10 +54,10 @@ Usr::Usr(const std::string& usrname,
     throw;
   }
 
-  for (size_t i = 0; i < initialFriendCapacity; ++i) friends[i] = nullptr;
-  for (size_t i = 0; i < initialChatCapacity; ++i) chats[i] = nullptr;
-  for (size_t i = 0; i < initialRequestCapacity; ++i) requests[i] = nullptr;
-  for (size_t i = 0; i < initialAlbumCapacity; ++i) albums[i] = nullptr;
+  for (size_t i = 0; i < initialFriendCapacity; ++i) {friends[i] = nullptr; core::countIteration();}
+  for (size_t i = 0; i < initialChatCapacity; ++i){chats[i] = nullptr; core::countIteration();}
+  for (size_t i = 0; i < initialRequestCapacity; ++i){requests[i] = nullptr;core::countIteration();}
+  for (size_t i = 0; i < initialAlbumCapacity; ++i){albums[i] = nullptr;core::countIteration();}
   
 
   totalMemoryAllocated += sizeof(Usr);
@@ -75,6 +76,7 @@ Usr::~Usr() {
   delete[] requests;
   requests = nullptr;
   for (size_t i = 0; i < albumCount; ++i) {
+    core::countIteration();
     delete albums[i];
     albums[i] = nullptr;
   }
@@ -101,6 +103,7 @@ void Usr::addFriend(Usr* newFriend) {
 
 bool Usr::isFriend(const Usr* targetUsr) const {
   for (size_t i = 0; i < friendCount; ++i) {
+    core::countIteration();
     if (friends[i] == targetUsr) return true;
   }
   return false;
@@ -118,8 +121,8 @@ void Usr::resizeFriends() {
     throw;
   }
 
-  for (size_t i = 0; i < friendCount; ++i)           auxFriends[i] = friends[i];
-  for (size_t i = friendCount; i < newCapacity; ++i) auxFriends[i] = nullptr;
+  for (size_t i = 0; i < friendCount; ++i){           auxFriends[i] = friends[i];core::countIteration();}
+  for (size_t i = friendCount; i < newCapacity; ++i){ auxFriends[i] = nullptr;core::countIteration();}
 
   delete[] friends;
   friends = auxFriends;
@@ -147,8 +150,8 @@ void Usr::resizeChats() {
     throw;
   }
 
-  for (size_t i = 0; i < chatCount; ++i)           auxChats[i] = chats[i];
-  for (size_t i = chatCount; i < newCapacity; ++i) auxChats[i] = nullptr;
+  for (size_t i = 0; i < chatCount; ++i){           auxChats[i] = chats[i];core::countIteration();}
+  for (size_t i = chatCount; i < newCapacity; ++i){ auxChats[i] = nullptr;core::countIteration();}
 
   delete[] chats;
   chats = auxChats;
@@ -176,8 +179,8 @@ void Usr::resizeRequests() {
     throw;
   }
 
-  for (size_t i = 0; i < requestCount; ++i)           auxRequests[i] = requests[i];
-  for (size_t i = requestCount; i < newCapacity; ++i) auxRequests[i] = nullptr;
+  for (size_t i = 0; i < requestCount; ++i){           auxRequests[i] = requests[i];core::countIteration();}
+  for (size_t i = requestCount; i < newCapacity; ++i){ auxRequests[i] = nullptr;core::countIteration();}
 
   delete[] requests;
   requests = auxRequests;
@@ -202,8 +205,10 @@ void Usr::removeRequest(Usr* targetRequest) {
   }
 
   for (size_t i = 0; i < requestCount; ++i) {
+    core::countIteration();
     if (requests[i] == targetRequest) {
       for (size_t j = i; j < requestCount - 1; ++j) {
+        core::countIteration();
         requests[j] = requests[j + 1];
       }
       requests[requestCount - 1] = nullptr;
@@ -232,8 +237,8 @@ void Usr::resizeAlbums() {
     throw;
   }
 
-  for (size_t i = 0; i < albumCount; ++i)           auxAlbums[i] = albums[i];
-  for (size_t i = albumCount; i < newCapacity; ++i) auxAlbums[i] = nullptr;
+  for (size_t i = 0; i < albumCount; ++i){           auxAlbums[i] = albums[i];core::countIteration();}
+  for (size_t i = albumCount; i < newCapacity; ++i){ auxAlbums[i] = nullptr;core::countIteration();}
 
   delete[] albums;
   albums = auxAlbums;
@@ -254,10 +259,11 @@ size_t Usr::countCommonFriends(const Usr* otherUsr) const {
   size_t foundCommon = 0;
 
   for (size_t i = 0; i < friendCount; ++i) {
-
+    core::countIteration();
     if (foundCommon == commonLimit) break;
 
     for (size_t j = 0; j < otherCount; ++j) {
+      core::countIteration();
       if (friends[i] == otherFriends[j]) {
         ++foundCommon;
         break;
@@ -269,6 +275,7 @@ size_t Usr::countCommonFriends(const Usr* otherUsr) const {
 
 bool Usr::hasPendingRequest(const Usr* targetUsr) const {
   for (size_t i = 0; i < requestCount; ++i) {
+    core::countIteration();
     if (requests[i] == targetUsr) return true;
   }
   return false;

@@ -1,5 +1,5 @@
 #include "Date.hpp"
-
+#include "core.hpp"
 #include <ctime>
 
 size_t Date::activeInstances = 0;
@@ -29,6 +29,7 @@ static unsigned int parseNumber(const std::string& str, unsigned int start, unsi
   unsigned int number = 0;
 
   for (unsigned int i = start; i < start + length; ++i) {
+    core::countIteration();
     number = number * 10 + static_cast<unsigned int>(str[i] - '0');
   }
 

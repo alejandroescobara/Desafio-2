@@ -18,6 +18,9 @@ int main() {
 
     if(!dataManager::loadSystemData(masterArrayUsrs,masterCountUsrs,masterCapacityUsrs,masterArrayChats,mastercountChats,masterCapacityChats))return 1;
 
+    core::registerMemoryAllocation(sizeof(Usr **)+sizeof(Usr *)* masterCapacityUsrs);
+    core::registerMemoryAllocation(sizeof(Chat **)+sizeof(Chat *)* masterCapacityChats);
+
     char election = '0';
     Usr* currentUsr = nullptr;
 
@@ -39,7 +42,7 @@ int main() {
                 udeaBook::profileViewer(currentUsr);
                 break;
             case '3':
-                udeaBook::viewSugestions(currentUsr, masterArrayUsrs, masterCountUsrs);
+                udeaBook::viewSugestions(currentUsr);
                 break;
             case '4':
                 udeaBook::msgManager(

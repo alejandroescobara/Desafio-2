@@ -2,7 +2,7 @@
 
 #include <new>
 #include <stdexcept>
-
+#include "core.hpp"
 #include "Usr.hpp"
 
 size_t Chat::totalMemoryAllocated = 0;
@@ -42,13 +42,14 @@ Chat::Chat(const Usr* usr1, const Usr* usr2, size_t initialMsgCapacity)
     throw;
   }
 
-  for (size_t i = 0; i < msgCapacity; ++i) msgs[i] = nullptr;
+  for (size_t i = 0; i < msgCapacity; ++i){ msgs[i] = nullptr;core::countIteration();}
 
   totalMemoryAllocated += sizeof(Chat)+(msgCapacity * sizeof(Msg*));
 }
 
 Chat::~Chat() {
   for (size_t i = 0; i < msgCount; ++i) {
+    core::countIteration();
     delete msgs[i];
     msgs[i] = nullptr;
   }
@@ -69,8 +70,8 @@ void Chat::resizeMsgs() {
     throw;
   }
 
-  for (size_t i = 0; i < msgCount ; ++i )         auxMsgs[i] = msgs[i];
-  for (size_t i = msgCount; i < newCapacity; ++i) auxMsgs[i] = nullptr;
+  for (size_t i = 0; i < msgCount ; ++i ){         auxMsgs[i] = msgs[i];core::countIteration();}
+  for (size_t i = msgCount; i < newCapacity; ++i){ auxMsgs[i] = nullptr;core::countIteration();}
   
   delete[] msgs;
   msgs = auxMsgs;
@@ -93,6 +94,7 @@ bool Chat::printAndMarkMsgs(const Usr* currentUsr, const Date& startDate, const 
   size_t high = msgCount;
 
   while (low < high) {
+    core::countIteration();
     size_t mid = low + (high - low) / 2;
 
     if (msgs[mid]->getSentDate() >= startDate) {
@@ -111,6 +113,7 @@ bool Chat::printAndMarkMsgs(const Usr* currentUsr, const Date& startDate, const 
   bool hasMsgs = false;
 
   while (i < msgCount && msgs[i]->getSentDate() <= endDate) {
+    core::countIteration();
     if (msgs[i]->getSender() != currentUsr) {
       std::cout << *(msgs[i]) << "\n";
       msgs[i]->setIsRead(true);
@@ -128,6 +131,7 @@ bool Chat::consumeUnread(const Usr* currentUsr) {
   bool hasUnread = false;
 
   for (size_t i = 0; i < msgCount; ++i) {
+    core::countIteration();
     if ((msgs[i]->getSender() != currentUsr) && (msgs[i]->getIsRead() == false)) {
       std::cout << *(msgs[i]) << "\n";
       msgs[i]->setIsRead(true);

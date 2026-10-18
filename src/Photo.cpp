@@ -1,5 +1,6 @@
 #include "Photo.hpp"
 #include "Date.hpp"
+#include "core.hpp"
 
 #include <string>
 #include <stdexcept>
@@ -22,7 +23,7 @@ Photo::Photo(const std::string& title, const Date& date, const std::string& albu
     throw;
   }
 
-  for (size_t i = 0; i < likeCapacity; ++i) likes[i] = nullptr;
+  for (size_t i = 0; i < likeCapacity; ++i){ likes[i] = nullptr;core::countIteration();}
 
   totalMemoryAllocated += sizeof(Photo)+(likeCapacity * sizeof(Usr*));
 }
@@ -34,6 +35,7 @@ Photo::~Photo(){
 
 bool Photo::isInLikes(const Usr* targetUsr) const{
   for(size_t i = 0; i < likeCount; i++){
+    core::countIteration();
     if (likes[i] == targetUsr) {
       return true;
     }
@@ -53,8 +55,8 @@ void Photo::resizeLikes() {
     throw;
   }
 
-  for (size_t i = 0; i < likeCount; ++i)           auxLikes[i] = likes[i];
-  for (size_t i = likeCount; i < newCapacity; ++i) auxLikes[i] = nullptr;
+  for (size_t i = 0; i < likeCount; ++i){           auxLikes[i] = likes[i];core::countIteration();}
+  for (size_t i = likeCount; i < newCapacity; ++i){ auxLikes[i] = nullptr;core::countIteration();}
 
   delete[] likes;
   likes = auxLikes;
@@ -69,8 +71,10 @@ void Photo::removeLike(Usr* targetLike) {
   }
 
   for (size_t i = 0; i < likeCount; ++i) {
+    core::countIteration();
     if (likes[i] == targetLike) {
       for (size_t j = i; j < likeCount - 1; ++j) {
+        core::countIteration();
         likes[j] = likes[j + 1];
       }
       likes[likeCount - 1] = nullptr;

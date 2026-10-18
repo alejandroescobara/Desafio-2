@@ -42,6 +42,7 @@ bool loadUsers(Usr**& masterArrayUsrs,
 
     std::string line;
     while (std::getline(file, line)) {
+        core::countIteration();
 
         std::stringstream ss(line);
 
@@ -71,13 +72,17 @@ bool loadUsers(Usr**& masterArrayUsrs,
     size_t i = 0;
 
     while (std::getline(file, line)) {
+        core::countIteration();
 
         Usr* currentUsr = masterArrayUsrs[i++];
 
         std::stringstream ss(line);
         std::string dummy, friendsStr, requestsStr;
 
-        for (int k = 0; k < 7; ++k) std::getline(ss, dummy, ';');
+        for (int k = 0; k < 7; ++k){
+            core::countIteration();
+            std::getline(ss, dummy, ';');
+        }
 
         std::getline(ss, friendsStr, ';');
         std::stringstream ssFriends(friendsStr);
@@ -85,6 +90,7 @@ bool loadUsers(Usr**& masterArrayUsrs,
         std::string friendUsrname;
 
         while (std::getline(ssFriends, friendUsrname, ',')) {
+            core::countIteration();
             Usr* friendPtr = core::usrNameSearch(masterArrayUsrs,friendUsrname,masterUsrCount);
             currentUsr->addFriend(friendPtr);
         }
@@ -95,6 +101,7 @@ bool loadUsers(Usr**& masterArrayUsrs,
         std::string requestUsrname;
 
         while (std::getline(ssRequests, requestUsrname, ',')) {
+            core::countIteration();
             Usr* requestPtr = core::usrNameSearch(masterArrayUsrs,requestUsrname,masterUsrCount);
             currentUsr->addRequest(requestPtr);
         }
@@ -125,6 +132,7 @@ bool loadAlbums(Usr**& masterArrayUsrs,
     Photo* currentPhoto = nullptr;
 
     while (std::getline(file, line)) {
+        core::countIteration();
 
         ss.clear();
         ss.str(line);
@@ -188,6 +196,7 @@ bool loadAlbums(Usr**& masterArrayUsrs,
             std::string likeUsrname;
 
             while (std::getline(ssLikes, likeUsrname, ',')) {
+                core::countIteration();
                 Usr* likePtr = core::usrNameSearch(masterArrayUsrs,likeUsrname,masterUsrCount);
                 currentPhoto->toggleLike(likePtr);
             }
@@ -222,7 +231,7 @@ bool loadChats(Usr**& masterArrayUsrs,
     std::stringstream ss;
 
     while (std::getline(file, line)) {
-
+        core::countIteration();
         if (line.empty()) continue;
         ss.clear();
         ss.str(line);
@@ -282,6 +291,7 @@ bool writeAlbums(Usr**& masterArrayUsrs,
     const Photo* currentPhoto = nullptr;
 
     for (size_t i = 0; i < masterUsrCount; ++i) {
+        core::countIteration();
         currentUsr = masterArrayUsrs[i];
 
         if (currentUsr->getAlbumCount() == 0) continue;
@@ -289,6 +299,7 @@ bool writeAlbums(Usr**& masterArrayUsrs,
         file << '#' << currentUsr->getUsrname() << '\n';
 
         for (size_t j = 0; j < currentUsr->getAlbumCount(); ++j) {
+            core::countIteration();
             currentAlbum = currentUsr->getAlbums()[j];
 
             file << '@' << currentAlbum->getTitle() << ';' << currentAlbum->getVisibility() << '\n';
@@ -296,6 +307,7 @@ bool writeAlbums(Usr**& masterArrayUsrs,
             if (currentAlbum->getPhotoCount() == 0) continue;
 
             for (size_t k = 0; k < currentAlbum->getPhotoCount(); ++k) {
+                core::countIteration();
                 currentPhoto = currentAlbum->getPhotos()[k];
 
                 file << currentPhoto->getTitle()                << ';'
@@ -303,6 +315,7 @@ bool writeAlbums(Usr**& masterArrayUsrs,
                      << currentPhoto->getFileSize()             << ';';
 
                 for (size_t w = 0; w < currentPhoto->getLikeCount(); ++w) {
+                    core::countIteration();
                     if (w > 0) file << ',';
                     file << currentPhoto->getLikes()[w]->getUsrname();
                 }
@@ -324,11 +337,13 @@ bool writeChats(Chat**& masterArrayChats,
     const Msg*  currentMsg  = nullptr;
 
     for (size_t i = 0; i < masterChatCount; ++i) {
+        core::countIteration();
         currentChat = masterArrayChats[i];
 
         file << '#' << currentChat->getUsrA()->getUsrname()
              << ';' << currentChat->getUsrB()->getUsrname() << '\n';
         for (size_t j = 0; j < currentChat->getMsgCount(); ++j) {
+            core::countIteration();
             currentMsg = currentChat->getMsgs()[j];
 
             file << currentMsg->getSender()->getUsrname()    << ';'
@@ -351,6 +366,7 @@ bool writeUsers(Usr** masterArrayUsrs,
     Usr* currentUsr = nullptr;
 
     for (size_t i = 0; i < masterUsrCount; ++i) {
+        core::countIteration();
         currentUsr = masterArrayUsrs[i];
 
         if (i > 0) file << '\n';
@@ -364,6 +380,7 @@ bool writeUsers(Usr** masterArrayUsrs,
              << currentUsr->joinDate.toString(false) << ';';
 
         for (size_t j = 0; j < currentUsr->friendCount; ++j) {
+            core::countIteration();
             if (j > 0) file << ',';
             file << currentUsr->friends[j]->usrname;
         }
@@ -371,6 +388,7 @@ bool writeUsers(Usr** masterArrayUsrs,
         file << ';';
 
         for (size_t j = 0; j < currentUsr->requestCount; ++j) {
+            core::countIteration();
             if (j > 0) file << ',';
             file << currentUsr->requests[j]->usrname;
         }
@@ -406,6 +424,7 @@ void freeSystemData(Usr**& masterArrayUsrs,   size_t& masterUsrCount,
     //-------
     if (masterArrayUsrs != nullptr) {
         for (size_t i = 0; i < masterUsrCount; ++i) {
+            core::countIteration();
             delete masterArrayUsrs[i];
             masterArrayUsrs[i] = nullptr;
         }
@@ -417,6 +436,7 @@ void freeSystemData(Usr**& masterArrayUsrs,   size_t& masterUsrCount,
 
     if (masterArrayChats != nullptr) {
         for (size_t i = 0; i < masterChatCount; ++i) {
+            core::countIteration();
             delete masterArrayChats[i];
             masterArrayChats[i] = nullptr;
         }

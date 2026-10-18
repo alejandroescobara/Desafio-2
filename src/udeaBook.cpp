@@ -26,7 +26,8 @@ namespace udeaBook{
                 Photo ** Photos = album->getPhotos();
                 size_t indexPhoto = 0;
                 while(election != '1'){
-
+                    std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+                    std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
                     std::cout<<"        /users/(sub-ruta-X-fija)/"<<albumUser->getUsrname()<<"/albums/"<<album->getTitle()<<"/"<<Photos[indexPhoto]->getTitle()<<"\n\n";
                     std::cout<<"                         menu de opciones:\n\n"
                              <<"                        1.-salir del album\n"
@@ -48,15 +49,17 @@ namespace udeaBook{
                         ((indexPhoto == 0)? indexPhoto = numPhotos - 1 : indexPhoto--);
                         break;
                     case '4':
-                        Photos[indexPhoto]->toggleLike(currentUsr);//<----- corregir conflicto de referencias
+                        Photos[indexPhoto]->toggleLike(currentUsr);
                         break;
                     default:
                         std::cout<<"\n\n                ---ingrese un valor valido---\n\n";
                         break;
                     }
+                    core::countIteration();
                 }
             }
             else{
+                std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
                 std::cout<<"\n\n                ---no hay fotos en el album---\n\n";
             }
         }
@@ -66,6 +69,8 @@ namespace udeaBook{
         void sendMsg(Usr * currentUsr, Chat * chat){
 
             std::string newMsgText;
+            core::registerMemoryAllocation(sizeof(newMsgText));
+            std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
             std::cout<<"ingrese el mensaje a mandar -- 512 caracteres max--:\n ";
             std::getline(std::cin >> std::ws, newMsgText);
             if(newMsgText.length()<513 && newMsgText.length() > 0){
@@ -75,6 +80,7 @@ namespace udeaBook{
             else{
                 std::cout<<"\n\n---el mensaje sobrepasa el maximo o no pose contenido---\n\n";
             }
+            core::registerMemoryDeallocation(sizeof(newMsgText));
         }
 
         void seeMsgByDate(Usr * currentUsr, Chat * currentChat){
@@ -124,10 +130,14 @@ namespace udeaBook{
         void interfaceSugestions(size_t k, Usr ** listaUsr,Usr * currentUsr){
             std::string usrName;
             char election = '0';
+            core::registerMemoryAllocation(sizeof(usrName)+sizeof(Usr**)+sizeof(Usr *));
             while(election != '2'){
                 bool isSend = false;
+                std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+                std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n'n";
                 std::cout<<"sugerencias de amistad: ";
                 for(short i = 0; i < k; i++){
+                    core::countIteration();
                     std::cout<<i+1<<".-"<<listaUsr[i]->getUsrname()<<"\n";
                 }
                 std::cout<<"\n                         menu de opciones:\n\n"
@@ -139,6 +149,7 @@ namespace udeaBook{
                     std::cout<<"\n\ningrese el usuario al que enviar la solicitud: ";
                     std::getline(std::cin >> std::ws, usrName);
                     for(short i = 0; i < k; i++){
+                        core::countIteration();
                         if(listaUsr[i]->getUsrname() == usrName){
                             listaUsr[i]->addRequest(currentUsr);
                             isSend = true;
@@ -157,11 +168,14 @@ namespace udeaBook{
                         std::cout<<"\n\n---ingrese un valor valido---\n\n";
                     }
                 }
+                core::countIteration();
             }
+            core::registerMemoryDeallocation(sizeof(usrName)+sizeof(Usr**)+sizeof(Usr *));
         }
 
         bool alreadyApear(Usr * suggestion, Usr *** comunFriends, size_t used){
             for(size_t i = 0; i < used; i++){
+                core::countIteration();
                 if(comunFriends[i/8][i%8] == suggestion){
                     return true;
                 }
@@ -177,6 +191,9 @@ namespace udeaBook{
         std::string pwdTry;
         std::string usrNameTry;
         Usr * currentUser;
+        core::registerMemoryAllocation(sizeof(pwdTry)+sizeof(usrNameTry)+sizeof(currentUser));
+        std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+        std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
         std::cout<<"\n\n            bienvenido a Ude@book\n\n"
                   <<"    ingrese el nombre de usuario: ";
         std::getline(std::cin >> std::ws, usrNameTry);
@@ -186,9 +203,11 @@ namespace udeaBook{
 
         currentUser = core::usrNameSearch(totalUsr,usrNameTry,numUsr);
         if(currentUser == nullptr || !(currentUser->checkPwd(pwdTry))){
+            core::registerMemoryDeallocation(sizeof(pwdTry)+sizeof(usrNameTry)+sizeof(currentUser));
             std::cout<<"\n\n----nombre de usuario o contraseña erroneos---\n\n";
             return nullptr;
         }
+        core::registerMemoryDeallocation(sizeof(pwdTry)+sizeof(usrNameTry)+sizeof(currentUser));
         return currentUser;
     }
 
@@ -203,7 +222,7 @@ namespace udeaBook{
         short ciclos = 0;
         unsigned char * ponderedFriends = new unsigned char[numFriends];
         char election = 'N';
-
+        core::registerMemoryAllocation(sizeof(generador)+sizeof(semilla)+sizeof(long long)+sizeof(ciclos)+(sizeof(*ponderedFriends) * numFriends)+(sizeof(int)*3));
         while(election == 'N' || election == 'n'){
             const Usr * const  * ptrFriends = currentUsr->getFriends();
             if(ciclos < 2){
@@ -221,6 +240,7 @@ namespace udeaBook{
                             if(communFriends>20){
                                 ponderedFriends[i] = 7;
                             }
+                            core::countIteration();
                         }
                     }
 
@@ -231,6 +251,7 @@ namespace udeaBook{
 
                         for(size_t j = 0; j < numFriends; j++){
                             totalWeigth += ponderedFriends[j];
+                            core::countIteration();
                         }
 
                         std::uniform_int_distribution<int> distribucion(1, totalWeigth);
@@ -238,6 +259,7 @@ namespace udeaBook{
                         while(acumulation < ramdonNum){
                             acumulation += ponderedFriends[k];
                             if (acumulation < ramdonNum){++k;}// habia problemas si ramdomnum == 0
+                            core::countIteration();
                         }
 
                         switch(i){
@@ -254,12 +276,15 @@ namespace udeaBook{
                             ponderedFriends[k] = 0;
                             break;
                         }
+                        core::countIteration();
                     }
+                    core::countIteration();
                 }
                 else{
                     if (ciclos == 0){
                         for(unsigned char i = 0; i<numFriends; i++){
                             std::cout<<"foto de perfil "<<ptrFriends[i]->getUsrname()<<":"<<ptrFriends[i]->getPfpPath()<<"\n";
+                            core::countIteration();
                         }
                     }
                     else{
@@ -268,14 +293,17 @@ namespace udeaBook{
                                 if(ponderedFriends[i] != 0){
                                     std::cout<<"foto de perfil "<<ptrFriends[i]->getUsrname()<<":"<<ptrFriends[i]->getPfpPath()<<"\n";
                                 }
+                                core::countIteration();
                             }
                         }
                         else{std::cout<<"\n---no hay amigos para alternar---\n\n";}
                     }
                 }
             }
-            else{std::cout<<"---solo se puede alternar el grupo de fotos una vez---";}
 
+            else{std::cout<<"---solo se puede alternar el grupo de fotos una vez---";}
+            std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+            std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
             std::cout<<"\n\n                Bienvenido a UdeABook//"<<currentUsr->getUsrname()<<"\n\n";
             std::cout<<"                        menu de opciones:\n\n"
                       <<"                     1.-administrar amistades\n"
@@ -292,16 +320,21 @@ namespace udeaBook{
                 numFriendsAux -= 3;
             }
             else{ciclos = 3;}
+            core::countIteration();
         }
         delete[] ponderedFriends;
+        core::registerMemoryDeallocation(sizeof(generador)+sizeof(semilla)+sizeof(long long)+sizeof(ciclos)+(sizeof(*ponderedFriends) * numFriends)+(sizeof(int)*3));
         return election;
     }
 
     // la funcion anterior nos dice que quiere el usuario faltan la respectivas funciones
 
     void friendsManage(Usr * currentUsr, Usr ** totalUsr, size_t numUsr){
+        core::registerMemoryAllocation(sizeof(char)+sizeof(Usr *)+sizeof(Usr **)+sizeof(size_t));
         char election = '4';
         while(election == '4'){
+            std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+            std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
             std::cout<<"                         menu de opciones:\n\n"
                      <<"                 1.-enviar solicitudes de amistad\n"
                      <<"                 2.-revisar solicitudes de amistad\n"
@@ -315,6 +348,7 @@ namespace udeaBook{
             Usr ** requests;
             Usr * requestUsr;
 
+            core::registerMemoryAllocation(sizeof(usrName)+sizeof(aux)+sizeof(size_t)+sizeof(Usr**)+sizeof(Usr **));
             switch (election) {
             case '1':
                 std::cout<<"ingrese el nombre de usuario al que desea mandar la solicitud: ";
@@ -337,11 +371,13 @@ namespace udeaBook{
                 std::cout<<"solicitudes recibidas: ";
                 for(size_t i = 0; i < numRequests; i++){
                     std::cout<<"-"<<requests[i]->getUsrname()<<"\n";
+                    core::countIteration();
                 }
                 std::cout<<"\n\ningrese el usuario al que desea aceptar la solicitud: ";
                 std::getline(std::cin >> std::ws, usrName);
 
                 for(size_t i = 0; i < numRequests; i++){
+                    core::countIteration();
                     if((requests[i]->getUsrname()) == usrName){
                         currentUsr->addFriend(requests[i]);
                         requests[i]->addFriend(currentUsr);
@@ -366,7 +402,10 @@ namespace udeaBook{
                 std::cout<<"---ingrese un valor valido---";
                 break;
             }
+            core::countIteration();
+            core::registerMemoryDeallocation(sizeof(usrName)+sizeof(aux)+sizeof(size_t)+sizeof(Usr**)+sizeof(Usr **));
         }
+        core::registerMemoryDeallocation(sizeof(char)+sizeof(Usr *)+sizeof(Usr **)+sizeof(size_t));
     }
 
     void profileViewer(Usr * currentUsr){
@@ -378,7 +417,9 @@ namespace udeaBook{
         std::cout<<"\n\ningrese el amigo al que desea visitar el perfil: ";
         std::getline(std::cin >> std::ws, usrName);
 
+        core::registerMemoryAllocation(sizeof(Usr **)+(sizeof(Usr *)*2)+sizeof(size_t));
         for(size_t i = 0; i < numFriends; i++){
+            core::countIteration();
             if(friends[i]->getUsrname() == usrName){
                 friend_ = friends[i];
                 break;
@@ -387,12 +428,16 @@ namespace udeaBook{
         if (friend_ != nullptr){
             size_t numAlbums = friend_->getAlbumCount();
             Album ** albums = friend_->getAlbums();
-            std::string privacity;
             char election = '3';
+            core::registerMemoryAllocation(sizeof(Album **)+(sizeof(size_t))+sizeof(char)+sizeof(usrName));
 
             for(size_t i = 0; i < numAlbums; i++){
                 std::cout<<"\n\nalbum no."<<i+1<<".-"<<albums[i]->getTitle()<<" "<<((albums[i]->getVisibility()=='P')?("public"):("amigos"))<<"\n";
+                core::countIteration();
             }
+
+            std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+            std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
             while(election != '2'){
                 std::cout<<"                         menu de opciones:\n\n"
                          <<"                          1.-ver un album\n"
@@ -406,8 +451,9 @@ namespace udeaBook{
                     std::string albumName;
                     std::cout<<"escriba el nombre del album: ";
                     std::getline(std::cin >> std::ws, albumName);
-
+                    core::registerMemoryAllocation(sizeof(albumName)+sizeof(found));
                     for(size_t i = 0; i < numAlbums; i++){
+                        core::countIteration();
                         if (albums[i]->getTitle() == albumName){
                             carousel(albums[i],currentUsr,friend_);
                             found = true;
@@ -415,8 +461,11 @@ namespace udeaBook{
                         }
                     }
                     if(!found){
+                        std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+                        std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
                         std::cout<<"---el album escrito no esta entre el grupo de albums de "<<friend_->getUsrname()<<"---";
                     }
+                    core::registerMemoryDeallocation(sizeof(albumName)+sizeof(found));
                     break;
                 }
                 case'2':
@@ -427,16 +476,28 @@ namespace udeaBook{
                     std::cout<<"\n\n---ingrese un valor valido---\n\n";
                     break;
                 }
+                core::countIteration();
             }
+            core::registerMemoryDeallocation(sizeof(Album **)+(sizeof(size_t))+sizeof(char));
         }
         else{
+            std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+            std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
             std::cout<<"\n\n---el usuario ingresado no esta entre tus amigos---\n\n";
         }
+        core::registerMemoryDeallocation(sizeof(Usr **)+(sizeof(Usr *)*2)+sizeof(size_t));
     }
 
     void msgManager(Usr* currentUsr, Chat ** &totalChats, size_t &numChats, size_t &chatsCapacity){
+
+        core::registerMemoryAllocation(sizeof(Usr *)+sizeof(Chat **)+sizeof(size_t *)+sizeof(size_t *));
+
         char election = ' ';
+        core::registerMemoryAllocation(sizeof(char));
         while(election != '4'){
+            std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+            std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
+            core::countIteration();
             std::cout<<"                         menu de opciones:\n\n"
                       <<"                        1.-enviar mensaje\n"
                       <<"                     2.-leer nuevos mensajes\n"
@@ -444,20 +505,21 @@ namespace udeaBook{
                       <<"                           4.-retroceder\n"
                       <<"                            su opcion: ";
             std::cin>>election;
-
             std::string usrName;
             Usr ** friends = currentUsr->getFriends();
             Usr * friend_ = nullptr;
             size_t numFriends = currentUsr->getFriendCount();
 
-
+            core::registerMemoryAllocation(sizeof(Usr**)+sizeof(Usr*)+sizeof(size_t));
 
             switch(election){
             case'1':{
                 std::cout<<"\n\ningrese el amigo con el que desea mensajear: ";
                 std::getline(std::cin >> std::ws, usrName);
+                core::registerMemoryAllocation(sizeof(usrName));
 
                 for(size_t i = 0; i < numFriends; i++){
+                    core::countIteration();
                     if(friends[i]->getUsrname() == usrName){
                         friend_ = friends[i];
                         break;
@@ -466,12 +528,16 @@ namespace udeaBook{
 
                 if (friend_ != nullptr){
                     Chat * currentChat = core::chatSearch(currentUsr->getUsrname(),friend_->getUsrname(),totalChats, numChats);
+                    core::registerMemoryAllocation(sizeof(Chat *));
                     if(currentChat != nullptr){
                         sendMsg(currentUsr, currentChat);
                     }
                     else{
+                        std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+                        std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
                         std::cout<<"\n\n---no se encontro el chat; se procedera a crear---\n\n";
                         Chat * newChat = new Chat(currentUsr,friend_);
+                        core::registerMemoryAllocation(sizeof(Chat *));
 
                         totalChats = core::chatIncrust(chatsCapacity,numChats,totalChats,newChat);
                         numChats++;
@@ -480,15 +546,20 @@ namespace udeaBook{
                         friend_->addChat(newChat);
                         sendMsg(currentUsr, newChat);
                     }
+
                 }
                 else{
+                    std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+                    std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
                     std::cout<<"\n\n---el usuario ingresado no esta entre tus amigos---\n\n";
                 }
+                core::registerMemoryDeallocation(sizeof(usrName));
                 break;
             }
             case'2':{
                 Usr ** totalFriends = currentUsr->getFriends();
                 for(size_t i = 0; i < numFriends; i++ ){
+                    core::countIteration();
                     Chat * chat = core::chatSearch(currentUsr->getUsrname(),totalFriends[i]->getUsrname(),totalChats,numChats);
                     if(chat != nullptr){
                         chat->consumeUnread(currentUsr);
@@ -499,8 +570,10 @@ namespace udeaBook{
             case'3':
                 std::cout<<"\n\ningrese el amigo con el que desea mensajear: ";
                 std::getline(std::cin >> std::ws, usrName);
+                core::registerMemoryAllocation(sizeof(usrName));
 
                 for(size_t i = 0; i < numFriends; i++){
+                    core::countIteration();
                     if(friends[i]->getUsrname() == usrName){
                         friend_ = friends[i];
                         break;
@@ -509,16 +582,23 @@ namespace udeaBook{
 
                 if (friend_ != nullptr){
                     Chat * currentChat = core::chatSearch(currentUsr->getUsrname(),friend_->getUsrname(),totalChats, numChats);
+                    core::registerMemoryAllocation(sizeof(Chat *));
                     if(currentChat != nullptr){
                         seeMsgByDate(currentUsr,currentChat);
                     }
                     else{
+                        std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+                        std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
                         std::cout<<"\n\n---no se encontro el chat--\n\n";
                     }
+                    core::registerMemoryDeallocation(sizeof(Chat *));
                 }
                 else{
+                    std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+                    std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
                     std::cout<<"\n\n---el usuario ingresado no esta entre tus amigos---\n\n";
                 }
+                core::registerMemoryDeallocation(sizeof(usrName));
                 break;
             case'4':
                 //esto esta solo pa romper switch
@@ -527,10 +607,12 @@ namespace udeaBook{
                 std::cout<<"\n\n---ingrese un valor valido---\n\n";
                 break;
             }
+            core::registerMemoryDeallocation(sizeof(Usr**)+sizeof(Usr*)+sizeof(size_t));
         }
+        core::registerMemoryDeallocation(sizeof(Usr *)+sizeof(Chat **)+sizeof(size_t *)+sizeof(size_t *)+sizeof(char));
     }
 
-    void viewSugestions(Usr * currentUsr, Usr ** totalUsr, size_t numUsr){
+    void viewSugestions(Usr * currentUsr){
         size_t k;
         std::cout<<"\n\ningrese el numero de sugerencias: ";
         std::cin>>k;
@@ -551,10 +633,12 @@ namespace udeaBook{
         size_t numFriends = currentUsr->getFriendCount();
 
         for(size_t amigo = 0; amigo< numFriends; amigo++){
+            core::countIteration();
             size_t numFriends2 = friendsList[amigo]->getFriendCount();
             Usr ** friendsList2 = friendsList[amigo]->getFriends();
 
             for(size_t amigo2 = 0; amigo2< numFriends2; amigo2++){
+                core::countIteration();
                 size_t numComunFriends = currentUsr->countCommonFriends(friendsList2[amigo2]);
                 Usr *friend_ = friendsList2[amigo2];
 
@@ -569,6 +653,7 @@ namespace udeaBook{
                         int** aux2 = new int*[newBlockCapacity];
 
                         for(size_t i = 0; i < blockCapacity; i++){
+                            core::countIteration();
                             aux1[i] = comunFriends[i];
                             aux2[i] = comunFriendsNum[i];
                         }
@@ -591,16 +676,21 @@ namespace udeaBook{
                 }
             }
         }
+        core::registerMemoryAllocation(sizeof(Usr ***)+sizeof(int **)+sizeof(Usr*)+( (sizeof(Usr *) + sizeof(int) )*countCapacity)+
+                                       (sizeof(size_t)*4)+( sizeof(Usr **)+sizeof(int *))*blockCapacity);
         if (k > used){
             k = used;
         }
         Usr ** listaUsr = new Usr*[k];
+        core::registerMemoryAllocation(sizeof(*listaUsr) * k);
         for(size_t i = 0;i < k;i++){
+            core::countIteration();
             int indexMax = 0;
             Usr * usrMax = nullptr;
             size_t position;
 
             for(size_t j = 0;j<used;j++){
+                core::countIteration();
                 int currentNum = comunFriendsNum[j/8][j%8];
                 if(currentNum > indexMax){
                     indexMax = currentNum;
@@ -612,15 +702,19 @@ namespace udeaBook{
             comunFriendsNum[position/8][position%8] = 0;
         }
         for(size_t i = 0; i < blockCapacity; i++){
+            core::countIteration();
             delete[] comunFriends[i];
             delete[] comunFriendsNum[i];
         }
 
         interfaceSugestions(k, listaUsr,currentUsr);
-        delete [] listaUsr;
+        delete[] listaUsr;
         delete[] comunFriends;
         delete[] comunFriendsNum;
-
+        core::registerMemoryDeallocation(sizeof(Usr ***)+sizeof(int **)+sizeof(Usr*)+
+                                        (sizeof(Usr * )*countCapacity)+(sizeof(int)*countCapacity)+
+                                        (sizeof(size_t)*4)+(sizeof(*listaUsr) * k)+
+                                        (sizeof(Usr **)+sizeof(int *)) * blockCapacity);
     }
 }
 

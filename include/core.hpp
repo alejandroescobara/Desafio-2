@@ -1,11 +1,20 @@
 #pragma once
 #include <string>
-
+#include <cstdint>
 #include "Usr.hpp"
 #include "Chat.hpp"
 #include "Msg.hpp"
 
 namespace core{
+
+    extern std::uint64_t totalIterations;//para el conteo de iteraciones
+    void countIteration() noexcept;//para el conteo de iteraciones
+
+    extern std::size_t currentMemoryBytes;//para el conteo de memoria
+    void registerMemoryAllocation(std::size_t bytes) noexcept;//para el conteo de memoria
+    void registerMemoryDeallocation(std::size_t bytes) noexcept;//para el conteo de memoria
+
+    size_t totalMemory();
 
     void initializerAll(Usr**&  masterArrayUsrs,
             size_t& masterUsrCount,
