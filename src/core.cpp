@@ -1,6 +1,6 @@
 #include "core.hpp"
 #include <string>
-
+#include <cstddef>
 
 #include "Chat.hpp"
 #include "Msg.hpp"
@@ -50,7 +50,7 @@ namespace core{
         return nullptr;
     }
 
-    void resizeMasterArrayUsrs(Usr ** &masterArrayUsrs,size_t &masterUsrcapacity, size_t &masterUsrCount){
+    void resizeMasterArrayUsrs(Usr ** &masterArrayUsrs,size_t &masterUsrcapacity, size_t masterUsrCount){
         size_t newCapacity = masterUsrcapacity * 2;
 
         Usr** auxUsers = nullptr;

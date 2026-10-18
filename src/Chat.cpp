@@ -137,10 +137,6 @@ bool Chat::consumeUnread(const Usr* currentUsr) {
   return hasUnread;
 }
 
-size_t Chat::getTotalMemoryAllocated() {
-  return totalMemoryAllocated;
-}
-
 Chat& Chat::operator+=(Msg* newMsg) {
   if (msgCount >= msgCapacity) {
     resizeMsgs();

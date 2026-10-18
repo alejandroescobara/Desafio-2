@@ -230,7 +230,7 @@ namespace dataManager {
           currentUsrB->addChat(currentChat);
 
 
-          if (masterChatCount >= masterChatCapacity) core::resizeMasterArrayChats(); //TODO: <- core.cpp
+          if (masterChatCount >= masterChatCapacity) core::resizeMasterArrayChats(masterArrayChats,masterChatCapacity,masterChatCount); //TODO: <- core.cpp
           masterArrayChats[masterChatCount++] = currentChat;
         }
         else {
