@@ -20,8 +20,10 @@ namespace dataManager {
                       Chat** masterArrayChats,
                       size_t masterChatCount);
 
-  void freeSystemData(Usr**&  masterArrayUsrs,
+  void freeSystemData(Usr**& masterArrayUsrs,
                       size_t& masterUsrCount,
                       Chat**& masterArrayChats,
-                      size_t& masterChatCount);
+                      size_t& masterChatCount,
+                      size_t& masterUsrCapacity,
+                      size_t& masterChatCapacity);
 }

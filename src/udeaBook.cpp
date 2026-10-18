@@ -283,6 +283,7 @@ namespace udeaBook{
                       <<"                      4.-administar mensajes\n"
                       <<".-ingrese 'N' o 'n' para alternar el grupo de fotos de perfil de amigos."
                       <<"              .- ingrese 'S' o 's' para cerrar su sesion"
+                      <<"             .- ingrese 'E' o 'e' para cerrar el programa"
                       <<"                            su opcion: ";
             std::cin>>election;
             if(election == 'N' || election == 'n'){
@@ -473,7 +474,7 @@ namespace udeaBook{
                         sendMsg(currentUsr, currentChat);
                     }
                     else{
-                        std::cout<<"\n\n---no se encontro el chat--\n\n";
+                        std::cout<<"\n\n---no se encontro el chat; se procedera a crear---\n\n";
                         Chat * newChat = new Chat(currentUsr,friend_);
 
                         totalChats = core::chatIncrust(chatsCapacity,numChats,totalChats,newChat);

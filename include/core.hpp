@@ -7,6 +7,13 @@
 
 namespace core{
 
+    void initializerAll(Usr**&  masterArrayUsrs,
+            size_t& masterUsrCount,
+            size_t& masterUsrCapacity,
+            Chat**& masterArrayChats,
+            size_t& masterChatCount,
+            size_t& masterChatCapacity);
+
     Usr * usrNameSearch(Usr ** totalUsr, std::string usrName, size_t numUsr);
 
     Chat * chatSearch(const std::string usrName1, const std::string usrName2, Chat** totalChats, size_t numChats);
