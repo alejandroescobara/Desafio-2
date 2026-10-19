@@ -71,6 +71,7 @@ namespace udeaBook{
             std::string newMsgText;
             core::registerMemoryAllocation(sizeof(newMsgText));
             std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
+            std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n";
             std::cout<<"ingrese el mensaje a mandar -- 512 caracteres max--:\n ";
             std::getline(std::cin >> std::ws, newMsgText);
             if(newMsgText.length()<513 && newMsgText.length() > 0){
@@ -204,7 +205,7 @@ namespace udeaBook{
         currentUser = core::usrNameSearch(totalUsr,usrNameTry,numUsr);
         if(currentUser == nullptr || !(currentUser->checkPwd(pwdTry))){
             core::registerMemoryDeallocation(sizeof(pwdTry)+sizeof(usrNameTry)+sizeof(currentUser));
-            std::cout<<"\n\n----nombre de usuario o contraseña erroneos---\n\n";
+            std::cout<<"\n\n----nombre de usuario o contrasenia erroneos---\n\n";
             return nullptr;
         }
         core::registerMemoryDeallocation(sizeof(pwdTry)+sizeof(usrNameTry)+sizeof(currentUser));

@@ -149,6 +149,7 @@ namespace core{
         // Se usa el mismo orden de nombres que en chatSearch
 
         if(numChats == chatsCapacity){
+            currentMemoryBytes += chatsCapacity * sizeof(Chat*);
             core::resizeMasterArrayChats(totalChats,chatsCapacity,numChats);
         }
 
