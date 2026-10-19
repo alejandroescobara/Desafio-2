@@ -135,7 +135,7 @@ namespace udeaBook{
             while(election != '2'){
                 bool isSend = false;
                 std::cout<<"\niteraciones totales: "<<core::totalIterations<<"\n";
-                std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n'n";
+                std::cout<<"memoria total: "<<core::totalMemory()<<" bytes\n\n";
                 std::cout<<"sugerencias de amistad: ";
                 for(short i = 0; i < k; i++){
                     core::countIteration();
